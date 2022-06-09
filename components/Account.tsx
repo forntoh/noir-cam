@@ -1,130 +1,89 @@
+import { yupResolver } from "@hookform/resolvers/yup";
 import { Session } from "@supabase/supabase-js";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { date, object, string } from "yup";
+import useProfile from "../hooks/useProfile";
+import useUpdateProfile from "../hooks/useUpdateProfile";
+import { Profile } from "../typings";
 import { supabase } from "../utils/supabaseClient";
 
 type Props = {
   session: Session;
 };
 
-interface Profile {
-  username?: string;
-  chaturbate_token?: string;
-  avatar_url?: string;
-}
-
 export default function Account({ session }: Props) {
-  const [loading, setLoading] = useState(true);
-  const [username, setUsername] = useState<string>();
-  const [chaturbate_token, setChaturbateToken] = useState<string>();
-  const [avatar_url, setAvatarUrl] = useState<string>();
+  const { loading: loading1, data, loadData } = useProfile();
+  const { loading: loading2, upsert } = useUpdateProfile();
+
+  const loading = loading1 || loading2;
+
+  const validationSchema = object().shape({
+    id: string().default(supabase.auth.user()?.id),
+    first_name: string()
+      .required()
+      .default(() => data?.first_name),
+    last_name: string()
+      .required()
+      .default(() => data?.last_name),
+    address: string()
+      .required()
+      .default(() => data?.address),
+    city: string()
+      .required()
+      .default(() => data?.city),
+    date_of_birth: date()
+      .required()
+      .default(() => new Date()),
+    updated_at: date().default(() => new Date()),
+  });
 
   useEffect(() => {
-    getProfile();
+    loadData();
   }, [session]);
 
-  async function getProfile() {
-    try {
-      setLoading(true);
-      const user = supabase.auth.user();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<Profile>({
+    defaultValues: validationSchema.cast({}),
+    resolver: yupResolver(validationSchema),
+  });
 
-      let { data, error, status } = await supabase
-        .from("profiles")
-        .select(`username, chaturbate_token, avatar_url`)
-        .eq("id", user?.id)
-        .single();
-
-      if (error && status !== 406) {
-        throw error;
-      }
-
-      if (data) {
-        setUsername(data.username);
-        setChaturbateToken(data.chaturbate_token);
-        setAvatarUrl(data.avatar_url);
-      }
-    } catch (error: any) {
-      alert(error.message);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function updateProfile({
-    username,
-    chaturbate_token,
-    avatar_url,
-  }: Profile) {
-    try {
-      setLoading(true);
-      const user = supabase.auth.user();
-
-      const updates = {
-        id: user?.id,
-        username,
-        chaturbate_token,
-        avatar_url,
-        updated_at: new Date(),
-      };
-
-      let { error } = await supabase.from("profiles").upsert(updates, {
-        returning: "minimal", // Don't return the value after inserting
-      });
-
-      if (error) {
-        throw error;
-      }
-    } catch (error: any) {
-      alert(error.message);
-    } finally {
-      setLoading(false);
-    }
+  async function updateProfile(profile: Profile) {
+    await upsert(profile);
+    reset();
   }
 
   return (
-    <div className="form-widget">
+    <form onSubmit={handleSubmit(updateProfile)}>
       <div>
-        <label htmlFor="email">Email</label>
-        <input id="email" type="text" value={session.user?.email} disabled />
+        <label htmlFor="first_name">First name</label>
+        <input type="text" {...register("first_name")} />
       </div>
       <div>
-        <label htmlFor="username">Name</label>
-        <input
-          id="username"
-          type="text"
-          value={username || ""}
-          onChange={(e) => setUsername(e.target.value)}
-        />
+        <label htmlFor="last_name">Last name</label>
+        <input type="text" {...register("last_name")} />
       </div>
       <div>
-        <label htmlFor="chaturbate_token">Chaturbate Token</label>
-        <input
-          id="chaturbate_token"
-          type="chaturbate_token"
-          value={chaturbate_token || ""}
-          onChange={(e) => setChaturbateToken(e.target.value)}
-        />
+        <label htmlFor="date_of_birth">Date of birth</label>
+        <input type="date" {...register("date_of_birth")} />
       </div>
-
       <div>
-        <button
-          className="button block primary"
-          onClick={() =>
-            updateProfile({ username, chaturbate_token, avatar_url })
-          }
-          disabled={loading}
-        >
+        <label htmlFor="address">Address</label>
+        <input type="text" {...register("address")} />
+      </div>
+      <div>
+        <label htmlFor="city">City</label>
+        <input type="text" {...register("city")} />
+      </div>
+      <div>
+        <button type="submit" disabled={loading}>
           {loading ? "Loading ..." : "Update"}
         </button>
       </div>
-
-      <div>
-        <button
-          className="button block"
-          onClick={() => supabase.auth.signOut()}
-        >
-          Sign Out
-        </button>
-      </div>
-    </div>
+    </form>
   );
 }
