@@ -21,7 +21,7 @@ export default function Auth() {
 
   return (
     <div className="space-y-6 flex flex-col max-w-xl border p-6 py-12 rounded-md">
-      <h1 className="header">Supabase + Next.js</h1>
+      <h1 className="header">Noircam</h1>
       <p className="description">
         Sign in via magic link with your email below
       </p>
@@ -31,9 +31,8 @@ export default function Auth() {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
-      <Input label="Name" type="text" />
       <Button
-        onClick={(e) => {
+        onClick={async (e) => {
           e.preventDefault();
           handleLogin(email);
         }}

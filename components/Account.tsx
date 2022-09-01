@@ -1,83 +1,77 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Session } from "@supabase/supabase-js";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { date, object, string } from "yup";
-import useProfile from "../hooks/useProfile";
-import useUpdateProfile from "../hooks/useUpdateProfile";
-import { Profile } from "../typings";
-import { supabase } from "../utils/supabaseClient";
+import { nextApi } from "../helpers/constants";
+import { useUpdateModel } from "../hooks/model";
+import { ApiResponse, Model } from "../typings";
 
 type Props = {
   session: Session;
 };
 
 export default function Account({ session }: Props) {
-  const { loading: loading1, data, loadData } = useProfile();
-  const { loading: loading2, upsert } = useUpdateProfile();
-
-  const loading = loading1 || loading2;
+  const { loading, upsert } = useUpdateModel();
 
   const validationSchema = object().shape({
-    id: string().default(supabase.auth.user()?.id),
-    first_name: string()
-      .required()
-      .default(() => data?.first_name),
-    last_name: string()
-      .required()
-      .default(() => data?.last_name),
-    address: string()
-      .required()
-      .default(() => data?.address),
-    city: string()
-      .required()
-      .default(() => data?.city),
-    date_of_birth: date()
-      .required()
-      .default(() => new Date()),
+    username: string().required(),
+    email: string().required(),
+    start_date: date().required(),
+    momo_number: string().required(),
     updated_at: date().default(() => new Date()),
   });
-
-  useEffect(() => {
-    loadData();
-  }, [session]);
 
   const {
     register,
     handleSubmit,
+    setError,
     reset,
     formState: { errors },
-  } = useForm<Profile>({
+  } = useForm<Model>({
     defaultValues: validationSchema.cast({}),
     resolver: yupResolver(validationSchema),
   });
 
-  async function updateProfile(profile: Profile) {
-    await upsert(profile);
-    reset();
+  async function updateModel(model: Model) {
+    const {
+      data: { data: user, error },
+    } = await nextApi.post<ApiResponse<{ id: string }>>("/model", {
+      email: model.email,
+      password: model.username,
+    });
+
+    if (error) {
+      setError(
+        "email",
+        { type: "custom", message: error.message },
+        { shouldFocus: true }
+      );
+    } else if (user) {
+      delete model.email;
+      model.user_id = user.id;
+      console.log(user, model);
+      await upsert(model);
+      reset();
+    }
   }
 
   return (
-    <form onSubmit={handleSubmit(updateProfile)}>
+    <form onSubmit={handleSubmit(updateModel)}>
       <div>
-        <label htmlFor="first_name">First name</label>
-        <input type="text" {...register("first_name")} />
+        <label htmlFor="first_name">Username</label>
+        <input type="text" {...register("username")} />
       </div>
       <div>
-        <label htmlFor="last_name">Last name</label>
-        <input type="text" {...register("last_name")} />
+        <label htmlFor="email">Email</label>
+        <input type="email" {...register("email")} />
       </div>
       <div>
-        <label htmlFor="date_of_birth">Date of birth</label>
-        <input type="date" {...register("date_of_birth")} />
+        <label htmlFor="date_of_birth">Start date</label>
+        <input type="date" {...register("start_date")} />
       </div>
       <div>
-        <label htmlFor="address">Address</label>
-        <input type="text" {...register("address")} />
-      </div>
-      <div>
-        <label htmlFor="city">City</label>
-        <input type="text" {...register("city")} />
+        <label htmlFor="address">Momo number</label>
+        <input type="text" {...register("momo_number")} />
       </div>
       <div>
         <button type="submit" disabled={loading}>
