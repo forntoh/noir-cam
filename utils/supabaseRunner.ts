@@ -14,7 +14,7 @@ export function runner<T>(fn: () => PromiseLike<PostgrestSingleResponse<any>>) {
       if (error && status !== 406) throw error;
       if (data) setData(data);
     } catch (error: any) {
-      alert(error.message);
+      alert(JSON.stringify(error.message));
     } finally {
       setLoading(false);
     }
@@ -38,7 +38,7 @@ export function upsert<T>(table: string, minimal: boolean = true) {
       if (error) throw error;
       if (data && !minimal) setData(data);
     } catch (error: any) {
-      alert(error.message);
+      alert(JSON.stringify(error.message));
     } finally {
       setLoading(false);
     }
