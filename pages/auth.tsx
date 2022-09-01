@@ -1,6 +1,6 @@
 import { useState } from "react";
+import { Button, Input } from "../components/input";
 import { supabase } from "../utils/supabaseClient";
-import { Button, Input } from "./input";
 
 export default function Auth() {
   const [loading, setLoading] = useState(false);
