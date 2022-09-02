@@ -29,6 +29,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
               await fetchStrip(username as string, date, nextSunday(date))
             );
           }
+          // Save earnings data
           res.status(200).json(earnings);
         } else {
           const today = new Date();
@@ -57,6 +58,7 @@ const fetchStrip = async (username: string, start: Date, end: Date) => {
     },
   });
   sanitize(data);
+  data["username"] = username;
   return data;
 };
 
@@ -91,6 +93,10 @@ function sanitize(data: any) {
   delete data["privateChatTips"];
   delete data["privateShows"];
   delete data["exclusivePrivates"];
+
+  data["tokens"] = data["totalEarnings"];
   data["periodStart"] = (data["periodStart"] as string).slice(0, 10);
   data["periodEnd"] = (data["periodEnd"] as string).slice(0, 10);
+
+  delete data["totalEarnings"];
 }
