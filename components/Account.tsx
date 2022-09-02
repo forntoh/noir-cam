@@ -2,9 +2,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Session } from "@supabase/supabase-js";
 import { useForm } from "react-hook-form";
 import { date, object, string } from "yup";
-import { nextApi } from "../helpers/constants";
 import { useUpdateModel } from "../hooks/model";
 import { ApiResponse, Model } from "../typings";
+import { nextApi } from "../utils/nextApi";
 
 type Props = {
   session: Session;
