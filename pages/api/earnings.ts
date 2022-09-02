@@ -3,6 +3,7 @@ import eachWeekOfInterval from "date-fns/eachWeekOfInterval";
 import nextSunday from "date-fns/nextSunday";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { stripchatApi } from "../../utils/stripchatApi";
+import supbaseAdmin from "../../utils/supabaseAdmin";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const {
@@ -29,15 +30,25 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
               await fetchStrip(username as string, date, nextSunday(date))
             );
           }
-          // Save earnings data
-          res.status(200).json(earnings);
+
+          // Save earnings data to Supabase
+          const { data, error } = await supbaseAdmin
+            .from("earnings")
+            .upsert(earnings);
+
+          res.status(200).json({});
         } else {
           const today = new Date();
           const start = startOfWeek(today, { weekStartsOn: 1 });
           const end = endOfWeek(today, { weekStartsOn: 1 });
-          res
-            .status(200)
-            .json(await fetchStrip(username as string, start, end));
+          const earning = await fetchStrip(username as string, start, end);
+
+          // Save earnings data to Supabase
+          const { data, error } = await supbaseAdmin
+            .from("earnings")
+            .upsert(earning);
+
+          res.status(200).json({});
         }
         break;
       default:
