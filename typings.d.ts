@@ -9,6 +9,14 @@ export interface Model {
   updated_at?: Date;
 }
 
+export interface Earning {
+  username?: string;
+  tokens: number;
+  periodStart: Date;
+  periodEnd: Date;
+  paidOut: boolean;
+}
+
 export interface ApiResponse<T> {
   data?: T;
   error?: ApiError;
