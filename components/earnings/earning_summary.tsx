@@ -9,7 +9,7 @@ function EarningSummary({ label, value }: Props) {
   return (
     <EarningWrapper label={label}>
       <h3>
-        {value ?? 0}
+        {value?.toLocaleString() ?? 0}
         <span className="text-lg"> tk</span>
       </h3>
     </EarningWrapper>
