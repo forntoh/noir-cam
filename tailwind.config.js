@@ -7,12 +7,16 @@ module.exports = {
     container: {
       center: true,
       padding: {
-        DEFAULT: "1.25rem",
+        DEFAULT: "1.75rem",
         sm: "2rem",
         lg: "5rem",
         xl: "6rem",
         "2xl": "7rem",
       },
+    },
+    fontFamily: {
+      display: ["Montserrat", "sans-serif"],
+      body: ["Montserrat", "sans-serif"],
     },
     extend: {},
   },
