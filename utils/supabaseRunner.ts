@@ -2,15 +2,16 @@ import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import { useState } from "react";
 import { supabase } from "../utils/supabaseClient";
 
-export function runner<T>(fn: () => PromiseLike<PostgrestSingleResponse<any>>) {
+export function runner<T>(
+  fn: (...args: any) => PromiseLike<PostgrestSingleResponse<any>>
+): [boolean, T | undefined, (...args: any) => PromiseLike<void>] {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<T>();
 
-  const loadData = async () => {
+  const loadData = async (...args: any) => {
     try {
       setLoading(true);
-      let { data, error, status } = await fn();
-
+      let { data, error, status } = await fn(...args);
       if (error && status !== 406) throw error;
       if (data) setData(data);
     } catch (error: any) {
@@ -20,7 +21,7 @@ export function runner<T>(fn: () => PromiseLike<PostgrestSingleResponse<any>>) {
     }
   };
 
-  return { loading, data, loadData };
+  return [loading, data, loadData];
 }
 
 export function upsert<T>(table: string, minimal: boolean = true) {
