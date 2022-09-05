@@ -17,6 +17,7 @@
     "react-dom": "18.1.0",
     "react-hook-form": "^7.34.2",
     "react-icons": "^4.4.0",
+    "recoil": "^0.7.5",
     "usehooks-ts": "^2.5.4",
     "yup": "^0.32.11"
   },
