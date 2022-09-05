@@ -1,4 +1,1 @@
-export {
-  default as useEarnings,
-  useEarnings as useEarningsForModel,
-} from "./useEarnings";
+export { useEarnings, useEarningsForPeriod } from "./useEarnings";

@@ -16,6 +16,7 @@ export function runner<T>(
       if (data) setData(data);
     } catch (error: any) {
       alert(JSON.stringify(error.message));
+      console.log(error);
     } finally {
       setLoading(false);
     }

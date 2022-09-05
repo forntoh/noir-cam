@@ -4,12 +4,23 @@ import { runner } from "../../utils/supabaseRunner";
 
 const table = "earnings";
 
-export const useEarnings = (username?: string) =>
-  runner<Earning[]>(() => {
-    return supabase.from(table).select().eq("username", username);
+export const useEarnings = () =>
+  runner<Earning[]>((username?: string, start?: Date, end?: Date) => {
+    let query = supabase.from(table).select();
+    if (username) query = query.eq("username", username);
+    if (start && end) {
+      const a = end.toISOString();
+      query = query
+        .gte("periodStart", start.toISOString())
+        .or(`periodStart.lte.${a},periodEnd.lte.${a}`);
+    }
+    return query.order("periodStart", { ascending: false });
   });
 
-export default () =>
-  runner<Earning[]>(() => {
-    return supabase.from(table).select("*");
+export const useEarningsForPeriod = () =>
+  runner<number>((start: Date, end: Date) => {
+    return supabase.rpc("earnings_for_period", {
+      a: start,
+      b: end,
+    });
   });
