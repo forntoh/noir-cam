@@ -1,1 +1,5 @@
-export { useEarnings, useEarningsForPeriod } from "./useEarnings";
+export {
+  useEarnings,
+  useEarningsForPeriod,
+  useTopModelsForPeriod,
+} from "./useEarnings";

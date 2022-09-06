@@ -24,3 +24,16 @@ export const useEarningsForPeriod = () =>
       b: end,
     });
   });
+
+export const useTopModelsForPeriod = () =>
+  runner<TopModels[]>((start: Date, end: Date) => {
+    return supabase.rpc("model_ranking_for_period", {
+      a: start,
+      b: end,
+    });
+  });
+
+type TopModels = {
+  uname: string;
+  amount: number;
+};
