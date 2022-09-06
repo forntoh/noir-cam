@@ -12,8 +12,8 @@ export interface Model {
 export interface Earning {
   username?: string;
   tokens: number;
-  periodStart: Date;
-  periodEnd: Date;
+  periodStart: string;
+  periodEnd: string;
   paidOut: boolean;
 }
 
