@@ -10,6 +10,7 @@ import {
 import _ from "lodash";
 import { useEffect, useState } from "react";
 import { AiOutlineCaretLeft, AiOutlineCaretRight } from "react-icons/ai";
+import { useEffectOnce } from "usehooks-ts";
 import Card from "../components/card";
 import {
   EarningSummary,
@@ -20,6 +21,8 @@ import Header from "../components/header";
 import IconButton from "../components/IconButton";
 import WelcomeBar from "../components/welcome_bar";
 import { useEarnings, useEarningsForPeriod } from "../hooks/earnings";
+import { useModels } from "../hooks/model";
+import { nextApi } from "../utils/nextApi";
 
 const now = new Date();
 
@@ -31,6 +34,8 @@ export default function Home() {
   const [, earningsForWeek, loadEarningsForWeek] = useEarningsForPeriod();
   const [, allEarnings, loadAllEarnings] = useEarningsForPeriod();
 
+  const [, models, loadModels] = useModels();
+
   useEffect(() => {
     loadEarnings(undefined, startOfMonth(refDate), endOfMonth(refDate));
     loadEarningsForMonth(startOfMonth(refDate), endOfMonth(refDate));
@@ -41,12 +46,24 @@ export default function Home() {
     loadAllEarnings(subYears(now, 5), now);
   }, [refDate]);
 
+  useEffectOnce(() => {
+    loadModels();
+  });
+
+  useEffect(() => {
+    models?.forEach((model) => {
+      nextApi.get("/earnings", {
+        params: { username: model.username },
+      });
+    });
+  }, [models]);
+
   const earningsPerModel = _(earnings).groupBy((x) => x.username);
 
   return (
     <>
       <Header />
-      <div className="container space-y-8">
+      <div className="container space-y-8 pb-8">
         <WelcomeBar />
         <div className="grid grid-cols-2 xl:grid-cols-4 gap-3">
           <Card className="p-3">
