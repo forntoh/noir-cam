@@ -1,3 +1,5 @@
+import { useRecoilState } from "recoil";
+import { converter, currencyAtom } from "../../helpers/helpers";
 import { Earning } from "../../typings";
 import { formatStringDate } from "../../utils/constants";
 import Card from "../card";
@@ -7,13 +9,20 @@ type Props = {
 };
 
 const ModelSummary = ({ earnings }: Props) => {
-  const total =
-    earnings?.reduce((partialSum, a) => partialSum + a.tokens, 0) ?? 0;
+  const [currency] = useRecoilState(currencyAtom);
+
+  const total = converter(
+    earnings?.reduce((partialSum, a) => partialSum + a.tokens, 0) ?? 0,
+    currency
+  );
+
   return (
     <Card>
       <b className="flex justify-between border-b-2 p-3">
         {earnings?.[0].username}
-        <span>{total.toLocaleString()} tk</span>
+        <span>
+          {total.toLocaleString()} {currency}
+        </span>
       </b>
       <ul className="p-3 space-y-4">
         {earnings?.map((it, i) => (
@@ -22,7 +31,9 @@ const ModelSummary = ({ earnings }: Props) => {
               {formatStringDate(it.periodStart, "yyyy-MM-dd")} —{" "}
               {formatStringDate(it.periodEnd, "yyyy-MM-dd")}
             </div>
-            <div>{it.tokens.toLocaleString()} tk</div>
+            <div>
+              {converter(it.tokens, currency).toLocaleString()} {currency}
+            </div>
           </li>
         ))}
       </ul>

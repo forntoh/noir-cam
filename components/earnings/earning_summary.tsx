@@ -1,3 +1,5 @@
+import { useRecoilState } from "recoil";
+import { converter, currencyAtom } from "../../helpers/helpers";
 import EarningWrapper from "./earning_wrapper";
 
 type Props = {
@@ -6,11 +8,14 @@ type Props = {
 };
 
 function EarningSummary({ label, value }: Props) {
+  const [currency] = useRecoilState(currencyAtom);
+  const amount = converter(value, currency);
+
   return (
     <EarningWrapper label={label}>
       <h3>
-        {value?.toLocaleString() ?? 0}
-        <span className="text-lg"> tk</span>
+        {amount.toLocaleString() ?? 0}
+        <span className="text-lg"> {currency}</span>
       </h3>
     </EarningWrapper>
   );
