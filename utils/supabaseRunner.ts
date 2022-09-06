@@ -13,7 +13,7 @@ export function runner<T>(
       setLoading(true);
       let { data, error, status } = await fn(...args);
       if (error && status !== 406) throw error;
-      if (data) setData(data);
+      setData(data);
     } catch (error: any) {
       alert(JSON.stringify(error.message));
       console.log(error);
