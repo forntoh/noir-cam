@@ -13,14 +13,16 @@ function TopModels({ month }: { month: Date }) {
   return (
     <EarningWrapper label={`Top models • ${format(month, "MMM yyyy")}`}>
       <ul className="font-extrabold text-sm">
-        {topModels?.map((model, i) => (
-          <li className="flex justify-between" key={i}>
-            {model.uname.length > 11
-              ? model.uname.substring(0, 10) + "..."
-              : model.uname}
-            <span>{Math.round((model.amount / 1000) * 10) / 10}K</span>
-          </li>
-        ))}
+        {topModels
+          ?.sort((a, b) => b.amount - a.amount)
+          ?.map((model, i) => (
+            <li className="flex justify-between" key={i}>
+              {model.uname.length > 11
+                ? model.uname.substring(0, 10) + "..."
+                : model.uname}
+              <span>{Math.round((model.amount / 1000) * 10) / 10}K</span>
+            </li>
+          ))}
       </ul>
     </EarningWrapper>
   );
