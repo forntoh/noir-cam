@@ -9,7 +9,7 @@ function Header() {
           <span className="font-medium">NOIR</span>CAM
         </h3>
       </MyLink>
-      <FaRegUserCircle className="w-6 h-6" />
+      <FaRegUserCircle className="w-7 h-7" />
     </div>
   );
 }
