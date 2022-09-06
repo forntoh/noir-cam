@@ -3,7 +3,7 @@ import { CurrencyType } from "../typings";
 
 export const currencyAtom = atom<CurrencyType>({
   key: "activeMenu",
-  default: "Ksh",
+  default: "tk",
 });
 
 export const converter = (
@@ -11,7 +11,7 @@ export const converter = (
   currency: CurrencyType
 ) => {
   switch (currency) {
-    case "$":
+    case "USD":
       return (value ?? 0) / 20;
     case "Ksh":
       return (value ?? 0) * 2;
