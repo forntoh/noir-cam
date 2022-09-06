@@ -9,5 +9,5 @@ export default (username?: string) =>
 
 export const useModels = () =>
   runner<Model[]>(() => {
-    return supabase.from("models").select();
+    return supabase.from("models").select("*");
   });

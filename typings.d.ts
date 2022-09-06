@@ -5,7 +5,7 @@ export interface Model {
   email?: string;
   username?: string;
   momo_number?: string;
-  start_date?: Date;
+  start_date?: string;
   updated_at?: Date;
 }
 
