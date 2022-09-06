@@ -1,5 +1,5 @@
-import { format } from "date-fns";
 import { Earning } from "../../typings";
+import { formatStringDate } from "../../utils/constants";
 import Card from "../card";
 
 type Props = {
@@ -19,8 +19,8 @@ const ModelSummary = ({ earnings }: Props) => {
         {earnings?.map((it, i) => (
           <li className="flex justify-between" key={i}>
             <div>
-              {format(it.periodStart, "MMM dd")} —{" "}
-              {format(it.periodEnd, "MMM dd")}
+              {formatStringDate(it.periodStart, "yyyy-MM-dd")} —{" "}
+              {formatStringDate(it.periodEnd, "yyyy-MM-dd")}
             </div>
             <div>{it.tokens.toLocaleString()} tk</div>
           </li>
