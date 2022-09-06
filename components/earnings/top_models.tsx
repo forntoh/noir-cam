@@ -1,8 +1,9 @@
+import { format } from "date-fns";
 import EarningWrapper from "./earning_wrapper";
 
-function TopModels() {
+function TopModels({ month }: { month: Date }) {
   return (
-    <EarningWrapper label="Top models • month">
+    <EarningWrapper label={`Top models • ${format(month, "MMM yyyy")}`}>
       <ul className="font-extrabold text-sm">
         <li className="flex justify-between">
           sweetbooty...<span>2.1K</span>
