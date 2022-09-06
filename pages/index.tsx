@@ -50,7 +50,10 @@ export default function Home() {
         <WelcomeBar />
         <div className="grid grid-cols-2 xl:grid-cols-4 gap-3">
           <Card className="p-3">
-            <EarningSummary label="Earnings • week" value={earningsForWeek} />
+            <EarningSummary
+              label="Earnings • this week"
+              value={earningsForWeek}
+            />
           </Card>
           <Card className="p-3">
             <EarningSummary
