@@ -6,7 +6,7 @@ export interface Model {
   username?: string;
   momo_number?: string;
   start_date?: string;
-  updated_at?: Date;
+  updated_at?: string;
 }
 
 export interface Earning {

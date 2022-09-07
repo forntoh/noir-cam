@@ -28,7 +28,7 @@ export default function Auth() {
           Sign in via magic link with your email below
         </p>
         <Input
-          label="Email"
+          placeholder="Email"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
