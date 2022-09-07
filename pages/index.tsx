@@ -1,4 +1,8 @@
-import { withPageAuth } from "@supabase/auth-helpers-nextjs";
+import {
+  getUser,
+  supabaseServerClient,
+  withPageAuth,
+} from "@supabase/auth-helpers-nextjs";
 import {
   endOfMonth,
   endOfWeek,
@@ -24,7 +28,7 @@ import { useEarnings, useEarningsForPeriod } from "../hooks/earnings";
 
 const now = new Date();
 
-export default function Home() {
+export default function Home({ isAdmin }: { isAdmin: boolean }) {
   const [refDate, setRefDate] = useState(now);
 
   const [, earnings, loadEarnings] = useEarnings();
@@ -48,7 +52,11 @@ export default function Home() {
     <PageWrapper>
       <div className="container space-y-8 pb-8">
         <WelcomeBar />
-        <div className="grid grid-cols-2 xl:grid-cols-4 gap-3">
+        <div
+          className={`grid grid-cols-2 ${
+            isAdmin ? "xl:grid-cols-4" : "xl:grid-cols-3"
+          } gap-3`}
+        >
           <Card className="p-3">
             <EarningSummary
               label="Earnings • this week"
@@ -61,16 +69,18 @@ export default function Home() {
               value={earningsForMonth}
             />
           </Card>
-          <Card className="p-3">
+          <Card className={`p-3 ${isAdmin ? "" : "col-span-2"}`}>
             <EarningSummary label="Total earnings" value={allEarnings} />
           </Card>
-          <Card className="p-3">
-            <TopModels month={refDate} />
-          </Card>
+          {isAdmin ? (
+            <Card className="p-3">
+              <TopModels month={refDate} />
+            </Card>
+          ) : undefined}
         </div>
         <div className="space-y-5">
           <h6 className="flex justify-between items-center select-none">
-            Earnings per model
+            {isAdmin ? "Earnings per model" : "Earnings"}
             <div className="flex items-center space-x-1">
               <IconButton
                 icon={AiOutlineCaretLeft}
@@ -109,4 +119,15 @@ export default function Home() {
   );
 }
 
-export const getServerSideProps = withPageAuth({ redirectTo: "/login" });
+export const getServerSideProps = withPageAuth({
+  redirectTo: "/login",
+  async getServerSideProps(ctx) {
+    const { user } = await getUser(ctx);
+
+    const { data: isAdmin } = await supabaseServerClient(ctx).rpc("is_admin", {
+      email: user.email,
+    });
+
+    return { props: { isAdmin } };
+  },
+});
