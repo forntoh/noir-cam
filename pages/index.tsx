@@ -17,8 +17,8 @@ import {
   ModelSummary,
   TopModels,
 } from "../components/earnings";
-import Header from "../components/header";
 import IconButton from "../components/IconButton";
+import { PageWrapper } from "../components/PageWrapper";
 import WelcomeBar from "../components/welcome_bar";
 import { useEarnings, useEarningsForPeriod } from "../hooks/earnings";
 
@@ -45,8 +45,7 @@ export default function Home() {
   const earningsPerModel = _(earnings).groupBy((x) => x.username);
 
   return (
-    <>
-      <Header />
+    <PageWrapper>
       <div className="container space-y-8 pb-8">
         <WelcomeBar />
         <div className="grid grid-cols-2 xl:grid-cols-4 gap-3">
@@ -106,7 +105,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-    </>
+    </PageWrapper>
   );
 }
 

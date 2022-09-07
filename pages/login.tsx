@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Header from "../components/header";
 import { Button, Input } from "../components/input";
+import { PageWrapper } from "../components/PageWrapper";
 import { supabase } from "../utils/supabaseClient";
 
 export default function Auth() {
@@ -21,8 +21,7 @@ export default function Auth() {
   };
 
   return (
-    <div className="flex flex-col h-full">
-      <Header />
+    <PageWrapper>
       <div className="grow"></div>
       <div className="container flex flex-col justify-end pb-12 gap-8">
         <p className="leading-6">
@@ -45,6 +44,6 @@ export default function Auth() {
           <span>{loading ? "Loading" : "Send magic link"}</span>
         </Button>
       </div>
-    </div>
+    </PageWrapper>
   );
 }

@@ -3,9 +3,10 @@ import {
   supabaseServerClient,
   withPageAuth,
 } from "@supabase/auth-helpers-nextjs";
+import { PageWrapper } from "../components/PageWrapper";
 
 export default function Model() {
-  return <div>Model</div>;
+  return <PageWrapper>Model</PageWrapper>;
 }
 
 export const getServerSideProps = withPageAuth({
