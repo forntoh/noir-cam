@@ -2,14 +2,14 @@ import { useRecoilState } from "recoil";
 import { currencyAtom } from "../helpers/helpers";
 import { CurrencyType } from "../typings";
 
-const currencies: CurrencyType[] = ["tk", "Ksh", "USD"];
+const currencies: CurrencyType[] = ["tk", "Ksh"];
 
 function WelcomeBar() {
   const [currency, setCurrency] = useRecoilState(currencyAtom);
 
   return (
     <div className="flex justify-between items-center">
-      <div>
+      <div className="select-none">
         Hello <b>sweetbooty_one</b>
       </div>
       <ul className="flex gap-2 font-semibold">

@@ -22,4 +22,4 @@ export interface ApiResponse<T> {
   error?: ApiError;
 }
 
-export type CurrencyType = "tk" | "USD" | "Ksh";
+export type CurrencyType = "tk" | "Ksh";

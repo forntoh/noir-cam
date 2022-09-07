@@ -15,7 +15,7 @@ function EarningSummary({ label, value }: Props) {
     <EarningWrapper label={label}>
       <h3>
         {amount.toLocaleString() ?? 0}
-        <span className="text-lg"> {currency}</span>
+        <span className="text-sm"> {currency}</span>
       </h3>
     </EarningWrapper>
   );

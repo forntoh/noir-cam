@@ -77,7 +77,7 @@ export default function Home() {
           </Card>
         </div>
         <div className="space-y-5">
-          <h6 className="flex justify-between items-center">
+          <h6 className="flex justify-between items-center select-none">
             Earnings per model
             <div className="flex items-center space-x-1">
               <IconButton
