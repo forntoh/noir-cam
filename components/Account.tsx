@@ -1,10 +1,6 @@
-import { yupResolver } from "@hookform/resolvers/yup";
 import { Session } from "@supabase/supabase-js";
-import { useForm } from "react-hook-form";
 import { date, object, string } from "yup";
 import { useUpdateModel } from "../hooks/model";
-import { ApiResponse, Model } from "../typings";
-import { nextApi } from "../utils/nextApi";
 
 type Props = {
   session: Session;
@@ -21,39 +17,39 @@ export default function Account({ session }: Props) {
     updated_at: date().default(() => new Date()),
   });
 
-  const {
-    register,
-    handleSubmit,
-    setError,
-    reset,
-    formState: { errors },
-  } = useForm<Model>({
-    defaultValues: validationSchema.cast({}),
-    resolver: yupResolver(validationSchema),
-  });
+  // const {
+  //   register,
+  //   handleSubmit,
+  //   setError,
+  //   reset,
+  //   formState: { errors },
+  // } = useForm<Model>({
+  //   defaultValues: validationSchema.cast({}),
+  //   resolver: yupResolver(validationSchema),
+  // });
 
-  async function updateModel(model: Model) {
-    const {
-      data: { data: user, error },
-    } = await nextApi.post<ApiResponse<{ id: string }>>("/model", {
-      email: model.email,
-      password: model.username,
-    });
+  // async function updateModel(model: Model) {
+  //   const {
+  //     data: { data: user, error },
+  //   } = await nextApi.post<ApiResponse<{ id: string }>>("/model", {
+  //     email: model.email,
+  //     password: model.username,
+  //   });
 
-    if (error) {
-      setError(
-        "email",
-        { type: "custom", message: error.message },
-        { shouldFocus: true }
-      );
-    } else if (user) {
-      delete model.email;
-      model.user_id = user.id;
-      console.log(user, model);
-      await upsert(model);
-      reset();
-    }
-  }
+  //   if (error) {
+  //     setError(
+  //       "email",
+  //       { type: "custom", message: error.message },
+  //       { shouldFocus: true }
+  //     );
+  //   } else if (user) {
+  //     delete model.email;
+  //     model.user_id = user.id;
+  //     console.log(user, model);
+  //     await upsert(model);
+  //     reset();
+  //   }
+  // }
 
   return (
     <form onSubmit={handleSubmit(updateModel)}>
