@@ -11,7 +11,7 @@ function TopModels({ month }: { month: Date }) {
   }, [month]);
 
   return (
-    <EarningWrapper label={`Top models • ${format(month, "MMM yyyy")}`}>
+    <EarningWrapper label={`Rankings • ${format(month, "MMM yyyy")}`}>
       <ul className="font-extrabold text-sm">
         {topModels
           ?.sort((a, b) => b.amount - a.amount)

@@ -5,7 +5,7 @@ type Props = {
 
 function EarningWrapper({ label, children }: Props) {
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 truncate">
       <b className="text-xs">{label}</b>
       {children}
     </div>
