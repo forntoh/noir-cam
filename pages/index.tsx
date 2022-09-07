@@ -1,3 +1,4 @@
+import { withPageAuth } from "@supabase/auth-helpers-nextjs";
 import {
   endOfMonth,
   endOfWeek,
@@ -87,7 +88,9 @@ export default function Home() {
           </h6>
           <div
             className={`flex flex-col xl:grid ${
-              earningsPerModel.size() % 2 == 0
+              earningsPerModel.size() <= 0
+                ? "xl:grid-cols-1"
+                : earningsPerModel.size() % 2 == 0
                 ? "xl:grid-cols-2"
                 : "xl:grid-cols-3"
             } gap-5`}
@@ -106,3 +109,5 @@ export default function Home() {
     </>
   );
 }
+
+export const getServerSideProps = withPageAuth({ redirectTo: "/login" });
