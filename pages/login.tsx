@@ -31,7 +31,7 @@ export default function Auth() {
           placeholder="Email"
           type="email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => setEmail((e.target as HTMLInputElement).value)}
         />
         <Button
           onClick={async (e) => {
