@@ -22,7 +22,6 @@ import IconButton from "../components/IconButton";
 import WelcomeBar from "../components/welcome_bar";
 import { useEarnings, useEarningsForPeriod } from "../hooks/earnings";
 import { useModels } from "../hooks/model";
-import { nextApi } from "../utils/nextApi";
 
 const now = new Date();
 
@@ -49,14 +48,6 @@ export default function Home() {
   useEffectOnce(() => {
     loadModels();
   });
-
-  useEffect(() => {
-    models?.forEach((model) => {
-      nextApi.get("/earnings", {
-        params: { username: model.username },
-      });
-    });
-  }, [models]);
 
   const earningsPerModel = _(earnings).groupBy((x) => x.username);
 
