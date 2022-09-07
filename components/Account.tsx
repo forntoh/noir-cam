@@ -56,19 +56,19 @@ export default function Account({ session }: Props) {
       {/* <form onSubmit={handleSubmit(updateModel)}> */}
       <div>
         <label htmlFor="first_name">Username</label>
-        <input type="text" {...register("username")} />
+        {/* <input type="text" {...register("username")} /> */}
       </div>
       <div>
         <label htmlFor="email">Email</label>
-        <input type="email" {...register("email")} />
+        {/* <input type="email" {...register("email")} /> */}
       </div>
       <div>
         <label htmlFor="date_of_birth">Start date</label>
-        <input type="date" {...register("start_date")} />
+        {/* <input type="date" {...register("start_date")} /> */}
       </div>
       <div>
         <label htmlFor="address">Momo number</label>
-        <input type="text" {...register("momo_number")} />
+        {/* <input type="text" {...register("momo_number")} /> */}
       </div>
       <div>
         <button type="submit" disabled={loading}>
