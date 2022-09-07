@@ -13,69 +13,71 @@ import supbaseAdmin from "../../utils/supabaseAdmin";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const {
-    query: { username, start_date },
+    query: { username, start_date, secret },
     method,
   } = req;
-
-  try {
-    switch (method) {
-      case "GET":
-        if (start_date) {
-          const result = eachWeekOfInterval(
-            {
-              start: parse(start_date as string, "yyyy-MM-dd", new Date()),
-              end: new Date(),
-            },
-            { weekStartsOn: 1 }
-          );
-
-          const earnings = [];
-
-          let item;
-
-          for (const date of result) {
-            earnings.push(
-              await fetchStrip(
-                username as string,
-                item ?? date,
-                nextMonday(date)
-              )
+  if (secret != process.env.NEXT_API_SECRET) {
+    res.status(401).json("Unauthorized");
+  } else
+    try {
+      switch (method) {
+        case "GET":
+          if (start_date) {
+            const result = eachWeekOfInterval(
+              {
+                start: parse(start_date as string, "yyyy-MM-dd", new Date()),
+                end: new Date(),
+              },
+              { weekStartsOn: 1 }
             );
-            item = nextMonday(date);
+
+            const earnings = [];
+
+            let item;
+
+            for (const date of result) {
+              earnings.push(
+                await fetchStrip(
+                  username as string,
+                  item ?? date,
+                  nextMonday(date)
+                )
+              );
+              item = nextMonday(date);
+            }
+
+            // Save earnings data to Supabase
+            const { data, error } = await supbaseAdmin
+              .from("earnings")
+              .upsert(earnings);
+
+            res.status(200).json({});
+          } else {
+            const today = new Date();
+            const start = startOfWeek(today, { weekStartsOn: 1 });
+            const end = endOfWeek(today, { weekStartsOn: 1 });
+            const earning = await fetchStrip(
+              username as string,
+              start,
+              addDays(end, 1)
+            );
+
+            // Save earnings data to Supabase
+            const { data, error } = await supbaseAdmin
+              .from("earnings")
+              .upsert(earning);
+
+            res.status(200).json(earning);
           }
-
-          // Save earnings data to Supabase
-          const { data, error } = await supbaseAdmin
-            .from("earnings")
-            .upsert(earnings);
-
-          res.status(200).json({});
-        } else {
-          const today = new Date();
-          const start = startOfWeek(today, { weekStartsOn: 1 });
-          const end = endOfWeek(today, { weekStartsOn: 1 });
-          const earning = await fetchStrip(
-            username as string,
-            start,
-            addDays(end, 1)
-          );
-
-          // Save earnings data to Supabase
-          const { data, error } = await supbaseAdmin
-            .from("earnings")
-            .upsert(earning);
-
-          res.status(200).json({});
-        }
-        break;
-      default:
-        res.setHeader("Allow", ["GET"]);
-        res.status(405).end(`Method ${method} Not Allowed`);
+          break;
+        default:
+          res.setHeader("Allow", ["GET"]);
+          res.status(405).end(`Method ${method} Not Allowed`);
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json("Internal Server Error");
     }
-  } catch (error) {
-    console.log(error);
-    res.status(500).json("Internal Server Error");
-  }
 };
 
 const fetchStrip = async (username: string, start: Date, end: Date) => {
