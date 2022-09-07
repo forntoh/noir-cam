@@ -5,15 +5,16 @@ import {
   withPageAuth,
 } from "@supabase/auth-helpers-nextjs";
 import { format } from "date-fns";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { object, string } from "yup";
 import { Button, Input } from "../components/input";
 import { PageWrapper } from "../components/PageWrapper";
-import { useUpdateModel } from "../hooks/model";
 import { Model } from "../typings";
+import { nextApi } from "../utils/nextApi";
 
 export default function AddModel() {
-  const { loading, upsert } = useUpdateModel();
+  const [loading, setLoading] = useState(false);
 
   const validationSchema = object().shape({
     username: string().required(),
@@ -33,30 +34,18 @@ export default function AddModel() {
     resolver: yupResolver(validationSchema),
   });
 
-  function updateModel(model: Model) {
-    console.log(model);
+  const updateModel = async (model: Model) => {
+    setLoading(true);
+    const { data: success } = await nextApi.post<boolean>("/model", model, {
+      params: { secret: process.env.NEXT_PUBLIC_API_SECRET },
+    });
 
-    // const {
-    //   data: { data: user, error },
-    // } = await nextApi.post<ApiResponse<{ id: string }>>("/model", {
-    //   email: model.email,
-    //   password: model.username,
-    // });
-
-    // if (error) {
-    //   setError(
-    //     "email",
-    //     { type: "custom", message: error.message },
-    //     { shouldFocus: true }
-    //   );
-    // } else if (user) {
-    //   delete model.email;
-    //   model.user_id = user.id;
-    //   console.log(user, model);
-    //   await upsert(model);
-    //   reset();
-    // }
-  }
+    if (success) {
+      reset();
+    } else {
+    }
+    setLoading(false);
+  };
 
   return (
     <PageWrapper>

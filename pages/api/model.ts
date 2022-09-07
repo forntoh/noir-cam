@@ -1,28 +1,52 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
+import { Model } from "../../typings";
+import { nextApi } from "../../utils/nextApi";
 import supbaseAdmin from "../../utils/supabaseAdmin";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const {
-    body: { email, password },
+    body: model,
     method,
+    query: { secret },
   } = req;
+
+  model as Model;
 
   try {
     switch (method) {
       case "POST":
-        const { data, error } = await supbaseAdmin.auth.api.createUser({
-          email: email,
-          password: password,
+        // Create the User
+        const { data: user, error } = await supbaseAdmin.auth.api.createUser({
+          email: model.email,
+          password: model.username,
         });
-        res.status(200).json({ data, error });
+
+        // Create the Model
+        if (!error && user) {
+          delete model.email;
+          model.user_id = user.id;
+
+          const { error } = await supbaseAdmin.from("models").upsert(model);
+
+          if (!error) {
+            delete model.user_id;
+            delete model.momo_number;
+            await nextApi.get("/earnings", {
+              params: { ...model, secret: secret },
+            });
+          }
+
+          res.status(200).json(error ? false : true);
+        } else {
+          res.status(200).json(false);
+        }
         break;
       default:
         res.setHeader("Allow", ["POST"]);
         res.status(405).end(`Method ${method} Not Allowed`);
     }
   } catch (error) {
-    console.log(error);
-    res.status(500).json("Internal Server Error");
+    res.status(200).json(false);
   }
 };

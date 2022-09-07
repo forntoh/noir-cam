@@ -16,7 +16,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     query: { username, start_date, secret },
     method,
   } = req;
-  if (secret != process.env.NEXT_API_SECRET) {
+  if (secret != process.env.NEXT_PUBLIC_API_SECRET) {
     res.status(401).json("Unauthorized");
   } else
     try {
