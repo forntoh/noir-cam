@@ -52,7 +52,7 @@ export default function Account({ session }: Props) {
   // }
 
   return (
-    <form onSubmit={handleSubmit(updateModel)}>
+    <form onSubmit={/*handleSubmit(updateModel)*/}>
       <div>
         <label htmlFor="first_name">Username</label>
         <input type="text" {...register("username")} />
