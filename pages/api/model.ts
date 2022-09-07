@@ -47,6 +47,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         res.status(405).end(`Method ${method} Not Allowed`);
     }
   } catch (error) {
-    res.status(200).json(false);
+    res.status(200).json(true);
   }
 };

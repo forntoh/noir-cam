@@ -5,6 +5,7 @@ import {
   withPageAuth,
 } from "@supabase/auth-helpers-nextjs";
 import { format } from "date-fns";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { object, string } from "yup";
@@ -15,6 +16,7 @@ import { nextApi } from "../utils/nextApi";
 
 export default function AddModel() {
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const validationSchema = object().shape({
     username: string().required(),
@@ -39,11 +41,7 @@ export default function AddModel() {
     const { data: success } = await nextApi.post<boolean>("/model", model, {
       params: { secret: process.env.NEXT_PUBLIC_API_SECRET },
     });
-
-    if (success) {
-      reset();
-    } else {
-    }
+    if (success) router.push("/");
     setLoading(false);
   };
 
