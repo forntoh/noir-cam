@@ -95,6 +95,11 @@ export default function Home() {
             {earningsPerModel
               .map((value, key) => <ModelSummary key={key} earnings={value} />)
               .value()}
+            {earningsPerModel.size() <= 0 ? (
+              <Card className="text-center py-14 text-gray-400">
+                No earnings for {format(refDate, "MMM yyyy")}
+              </Card>
+            ) : undefined}
           </div>
         </div>
       </div>

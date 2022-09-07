@@ -28,8 +28,8 @@ const ModelSummary = ({ earnings }: Props) => {
         {earnings?.map((it, i) => (
           <li className="flex justify-between" key={i}>
             <div>
-              {formatStringDate(it.periodStart, "yyyy-MM-dd")} —{" "}
-              {formatStringDate(it.periodEnd, "yyyy-MM-dd")}
+              {formatStringDate(it.periodStart)} —{" "}
+              {formatStringDate(it.periodEnd)}
             </div>
             <div>
               {converter(it.tokens, currency).toLocaleString()} {currency}
