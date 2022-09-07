@@ -11,8 +11,6 @@ export const converter = (
   currency: CurrencyType
 ) => {
   switch (currency) {
-    case "USD":
-      return (value ?? 0) / 20;
     case "Ksh":
       return (value ?? 0) * 2;
     default:
