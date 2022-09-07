@@ -1,13 +1,14 @@
-type Props = JSX.IntrinsicElements["input"] & {
-  label?: string;
-};
+import React from "react";
 
-export function Input(props: Props) {
+export const Input = React.forwardRef<
+  HTMLInputElement,
+  React.HTMLProps<HTMLInputElement>
+>((props: React.HTMLProps<HTMLInputElement>, ref) => {
   return (
     <input
       {...props}
-      placeholder={props.label}
+      ref={ref}
       className={`${props.className} rounded border-2 border-gray-300 focus:border-gray-400 focus:ring-0`}
     />
   );
-}
+});
