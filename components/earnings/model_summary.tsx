@@ -5,10 +5,11 @@ import { formatStringDate } from "../../utils/constants";
 import Card from "../card";
 
 type Props = {
+  month?: string;
   earnings?: Earning[];
 };
 
-const ModelSummary = ({ earnings }: Props) => {
+const ModelSummary = ({ earnings, month }: Props) => {
   const [currency] = useRecoilState(currencyAtom);
 
   const total = converter(
@@ -19,7 +20,7 @@ const ModelSummary = ({ earnings }: Props) => {
   return (
     <Card>
       <b className="flex justify-between border-b-2 p-3">
-        {earnings?.[0].username}
+        {month ?? earnings?.[0].username}
         <span>
           {total.toLocaleString()} {currency}
         </span>
