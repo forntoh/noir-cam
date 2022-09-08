@@ -14,15 +14,10 @@ import {
 } from "date-fns";
 import _ from "lodash";
 import { useEffect, useState } from "react";
-import { AiOutlineCaretLeft, AiOutlineCaretRight } from "react-icons/ai";
 import Card from "../components/card";
-import {
-  EarningSummary,
-  ModelSummary,
-  TopModels,
-} from "../components/earnings";
-import IconButton from "../components/IconButton";
+import { EarningSummary, TopModels } from "../components/earnings";
 import { PageWrapper } from "../components/PageWrapper";
+import { PerMonthEarnings } from "../components/PerMonthEarnings";
 import WelcomeBar from "../components/welcome_bar";
 import { useEarnings, useEarningsForPeriod } from "../hooks/earnings";
 
@@ -78,42 +73,13 @@ export default function Home({ isAdmin }: { isAdmin: boolean }) {
             </Card>
           ) : undefined}
         </div>
-        <div className="space-y-5">
-          <h6 className="flex justify-between items-center select-none">
-            {isAdmin ? "Earnings per model" : "Earnings"}
-            <div className="flex items-center space-x-1">
-              <IconButton
-                icon={AiOutlineCaretLeft}
-                onClick={() => setRefDate(subMonths(refDate, 1))}
-              />
-              <span>{format(refDate, "MMM yyyy")}</span>
-              {refDate.getMonth() == new Date().getMonth() ? undefined : (
-                <IconButton
-                  icon={AiOutlineCaretRight}
-                  onClick={() => setRefDate(subMonths(refDate, -1))}
-                />
-              )}
-            </div>
-          </h6>
-          <div
-            className={`flex flex-col xl:grid ${
-              earningsPerModel.size() <= 0
-                ? "xl:grid-cols-1"
-                : earningsPerModel.size() % 2 == 0
-                ? "xl:grid-cols-2"
-                : "xl:grid-cols-3"
-            } gap-5`}
-          >
-            {earningsPerModel
-              .map((value, key) => <ModelSummary key={key} earnings={value} />)
-              .value()}
-            {earningsPerModel.size() <= 0 ? (
-              <Card className="text-center py-14 text-gray-400">
-                No earnings for {format(refDate, "MMM yyyy")}
-              </Card>
-            ) : undefined}
-          </div>
-        </div>
+        <PerMonthEarnings
+          refDate={refDate}
+          earnings={earningsPerModel}
+          title={isAdmin ? "Earnings per model" : "Earnings"}
+          onNext={() => setRefDate(subMonths(refDate, -1))}
+          onPrevious={() => setRefDate(subMonths(refDate, 1))}
+        />
       </div>
     </PageWrapper>
   );

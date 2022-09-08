@@ -3,13 +3,20 @@ import {
   supabaseServerClient,
   withPageAuth,
 } from "@supabase/auth-helpers-nextjs";
-import { endOfMonth, format, startOfMonth, subYears } from "date-fns";
+import {
+  endOfMonth,
+  format,
+  startOfMonth,
+  subMonths,
+  subYears,
+} from "date-fns";
 import _, { Dictionary, Object } from "lodash";
 import { useEffect, useState } from "react";
 import { useEffectOnce } from "usehooks-ts";
 import Card from "../../components/card";
-import { EarningSummary, ModelSummary } from "../../components/earnings";
+import { EarningSummary } from "../../components/earnings";
 import { PageWrapper } from "../../components/PageWrapper";
+import { PerMonthEarnings } from "../../components/PerMonthEarnings";
 import WelcomeBar from "../../components/welcome_bar";
 import { useEarnings } from "../../hooks/earnings";
 import { useModel } from "../../hooks/model";
@@ -23,8 +30,12 @@ type Props = {
 };
 
 export default function ModelDetails({ username }: Props) {
+  const [refDate, setRefDate] = useState(now);
+
   const [, monthEarnings, loadMonthEarnings] = useEarnings();
+  const [, monthSelectEarnings, loadSelectMonthEarnings] = useEarnings();
   const [, allEarnings, loadAllEarnings] = useEarnings();
+
   const [, model, loadModel] = useModel();
   const [earningsGrouped, setEarningsGrouped] =
     useState<Object<Dictionary<Earning[]>>>();
@@ -36,10 +47,20 @@ export default function ModelDetails({ username }: Props) {
   });
 
   useEffect(() => {
-    setEarningsGrouped(
-      _(allEarnings).groupBy((x) => formatStringDate(x.periodStart, "MMM yyyy"))
+    loadSelectMonthEarnings(
+      username,
+      startOfMonth(refDate),
+      endOfMonth(refDate)
     );
-  }, [allEarnings]);
+  }, [refDate]);
+
+  useEffect(() => {
+    setEarningsGrouped(
+      _(monthSelectEarnings).groupBy((x) =>
+        formatStringDate(x.periodStart, "MMM yyyy")
+      )
+    );
+  }, [monthSelectEarnings]);
 
   return (
     <PageWrapper>
@@ -71,14 +92,14 @@ export default function ModelDetails({ username }: Props) {
             </div>
           </div>
         </Card>
-        <div className="space-y-5">
-          <h6>Earnings</h6>
-          {earningsGrouped
-            ?.map((value, key) => (
-              <ModelSummary key={key} earnings={value} month={key} />
-            ))
-            .value()}
-        </div>
+        <PerMonthEarnings
+          refDate={refDate}
+          earnings={earningsGrouped}
+          title="Earnings"
+          onNext={() => setRefDate(subMonths(refDate, -1))}
+          onPrevious={() => setRefDate(subMonths(refDate, 1))}
+          showMonth
+        />
       </div>
     </PageWrapper>
   );
