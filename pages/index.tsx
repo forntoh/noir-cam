@@ -79,6 +79,7 @@ export default function Home({ isAdmin }: { isAdmin: boolean }) {
           title={isAdmin ? "Earnings per model" : "Earnings"}
           onNext={() => setRefDate(subMonths(refDate, -1))}
           onPrevious={() => setRefDate(subMonths(refDate, 1))}
+          showMonth={!isAdmin}
         />
       </div>
     </PageWrapper>
