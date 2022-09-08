@@ -18,7 +18,7 @@ import { EarningSummary } from "../../components/earnings";
 import { PageWrapper } from "../../components/PageWrapper";
 import { PerMonthEarnings } from "../../components/PerMonthEarnings";
 import WelcomeBar from "../../components/welcome_bar";
-import { useEarnings } from "../../hooks/earnings";
+import { useEarnings, useEarningsForPeriod } from "../../hooks/earnings";
 import { useModel } from "../../hooks/model";
 import { Earning } from "../../typings";
 import { formatStringDate } from "../../utils/constants";
@@ -32,9 +32,9 @@ type Props = {
 export default function ModelDetails({ username }: Props) {
   const [refDate, setRefDate] = useState(now);
 
-  const [, monthEarnings, loadMonthEarnings] = useEarnings();
+  const [, monthEarnings, loadMonthEarnings] = useEarningsForPeriod();
   const [, monthSelectEarnings, loadSelectMonthEarnings] = useEarnings();
-  const [, allEarnings, loadAllEarnings] = useEarnings();
+  const [, allEarnings, loadAllEarnings] = useEarningsForPeriod();
 
   const [, model, loadModel] = useModel();
   const [earningsGrouped, setEarningsGrouped] =
@@ -42,8 +42,8 @@ export default function ModelDetails({ username }: Props) {
 
   useEffectOnce(() => {
     loadModel(username);
-    loadMonthEarnings(username, startOfMonth(now), endOfMonth(now));
-    loadAllEarnings(username, subYears(now, 5), now);
+    loadMonthEarnings(startOfMonth(now), endOfMonth(now), username);
+    loadAllEarnings(subYears(now, 5), now, username);
   });
 
   useEffect(() => {
@@ -77,18 +77,9 @@ export default function ModelDetails({ username }: Props) {
             <div className="p-3 flex justify-between">
               <EarningSummary
                 label={`To pay • ${format(now, "MMM yyyy")}`}
-                value={monthEarnings?.reduce(
-                  (partialSum, a) => partialSum + a.tokens,
-                  0
-                )}
+                value={monthEarnings}
               />
-              <EarningSummary
-                label="Total Earnings"
-                value={allEarnings?.reduce(
-                  (partialSum, a) => partialSum + a.tokens,
-                  0
-                )}
-              />
+              <EarningSummary label="Total Earnings" value={allEarnings} />
             </div>
           </div>
         </Card>
