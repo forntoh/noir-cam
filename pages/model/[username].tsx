@@ -49,7 +49,7 @@ export default function ModelDetails({ username }: Props) {
           <div className="gap-2 flex flex-col">
             <h6 className="border-b-2 p-3 flex justify-between items-center font-bold">
               {username}
-              <span className="text-xs opacity-30 text-right">
+              <span className="text-xs lg:text-base opacity-30 text-right">
                 Started on {model?.start_date}
               </span>
             </h6>

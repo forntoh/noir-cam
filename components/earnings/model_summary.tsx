@@ -3,6 +3,7 @@ import { converter, currencyAtom } from "../../helpers/helpers";
 import { Earning } from "../../typings";
 import { formatStringDate } from "../../utils/constants";
 import Card from "../card";
+import MyLink from "../link";
 
 type Props = {
   month?: string;
@@ -20,7 +21,14 @@ const ModelSummary = ({ earnings, month }: Props) => {
   return (
     <Card>
       <b className="flex justify-between border-b-2 p-3">
-        {month ?? earnings?.[0].username}
+        {month ?? (
+          <MyLink
+            href={`/model/${earnings?.[0].username}`}
+            className="cursor-pointer"
+          >
+            {earnings?.[0].username}
+          </MyLink>
+        )}
         <span>
           {total.toLocaleString()} {currency}
         </span>
