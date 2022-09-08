@@ -49,7 +49,7 @@ export default function Home({ isAdmin }: { isAdmin: boolean }) {
         <WelcomeBar />
         <div
           className={`grid grid-cols-2 ${
-            isAdmin ? "xl:grid-cols-4" : "xl:grid-cols-3"
+            isAdmin ? "xl:grid-cols-4" : "xl:grid-cols-2"
           } gap-3`}
         >
           <Card className="p-3">
