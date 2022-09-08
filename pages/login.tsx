@@ -1,3 +1,5 @@
+import { getUser } from "@supabase/auth-helpers-nextjs";
+import { GetServerSideProps } from "next";
 import { useState } from "react";
 import { Button, Input } from "../components/input";
 import { PageWrapper } from "../components/PageWrapper";
@@ -47,3 +49,14 @@ export default function Auth() {
     </PageWrapper>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { user } = await getUser(ctx);
+
+  if (user) {
+    ctx.res?.writeHead(302, { Location: "/" });
+    ctx.res?.end();
+  }
+
+  return { props: {} };
+};
