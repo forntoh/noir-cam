@@ -18,10 +18,11 @@ export const useEarnings = () =>
   });
 
 export const useEarningsForPeriod = () =>
-  runner<number>((start: Date, end: Date) => {
+  runner<number>((start: Date, end: Date, username: string) => {
     return supabase.rpc("earnings_for_period", {
       a: start,
       b: end,
+      uname: username,
     });
   });
 
