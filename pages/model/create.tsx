@@ -9,10 +9,10 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { object, string } from "yup";
-import { Button, Input } from "../components/input";
-import { PageWrapper } from "../components/PageWrapper";
-import { Model } from "../typings";
-import { nextApi } from "../utils/nextApi";
+import { Button, Input } from "../../components/input";
+import { PageWrapper } from "../../components/PageWrapper";
+import { Model } from "../../typings";
+import { nextApi } from "../../utils/nextApi";
 
 export default function AddModel() {
   const [loading, setLoading] = useState(false);
