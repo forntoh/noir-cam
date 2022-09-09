@@ -11,7 +11,7 @@ module.exports = {
         sm: "2rem",
         lg: "5rem",
         xl: "8rem",
-        "2xl": "12rem",
+        "2xl": "14rem",
       },
     },
     fontFamily: {
