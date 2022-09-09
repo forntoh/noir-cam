@@ -1,6 +1,8 @@
 import { getUser } from "@supabase/auth-helpers-nextjs";
+import { useUser } from "@supabase/auth-helpers-react";
 import { GetServerSideProps } from "next";
-import { useState } from "react";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { Button, Input } from "../components/input";
 import { PageWrapper } from "../components/PageWrapper";
 import { supabase } from "../utils/supabaseClient";
@@ -8,6 +10,12 @@ import { supabase } from "../utils/supabaseClient";
 export default function Auth() {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
+  const { user } = useUser();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user) router.push("/");
+  }, [user]);
 
   const handleLogin = async (email: string) => {
     try {
