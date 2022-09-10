@@ -49,7 +49,7 @@ export default function Report() {
   const earningsPerModel = _(earnings).groupBy((x) => x.username);
 
   return (
-    <PageWrapper title={`Report ${format(refDate, "MM/yyyy")}`}>
+    <PageWrapper title={`Report ${format(refDate, "MM-yyyy")}`}>
       <div className="container space-y-6 pb-8">
         <div className="space-y-3">
           <h5 className="flex items-center justify-between">

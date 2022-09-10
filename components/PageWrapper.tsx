@@ -8,7 +8,7 @@ export const PageWrapper = ({ children, title }: Props) => {
   return (
     <div className="flex flex-col h-full">
       <Head>
-        <title>{title} - NoirCam</title>
+        <title>{title} — NoirCam</title>
       </Head>
       <Header />
       {children}
