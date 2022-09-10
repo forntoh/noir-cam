@@ -1,19 +1,15 @@
 import { format } from "date-fns";
 import { Dictionary, Object } from "lodash";
-import { AiOutlineCaretLeft, AiOutlineCaretRight } from "react-icons/ai";
 import { Earning } from "../typings";
 import Card from "./card";
 import { ModelSummary } from "./earnings";
-import IconButton from "./IconButton";
+import { MonthStepper, MonthStepperProps } from "./MonthStepper";
 
 type Props = {
-  refDate: Date;
   earnings?: Object<Dictionary<Earning[]>>;
-  onNext?: () => void;
-  onPrevious?: () => void;
   showMonth?: boolean;
   title: string;
-};
+} & MonthStepperProps;
 
 export const PerMonthEarnings = ({
   refDate,
@@ -27,13 +23,11 @@ export const PerMonthEarnings = ({
     <div className="space-y-5">
       <h6 className="flex justify-between items-center select-none">
         {title}
-        <div className="flex items-center space-x-1">
-          <IconButton icon={AiOutlineCaretLeft} onClick={onPrevious} />
-          <span>{format(refDate, "MMM yyyy")}</span>
-          {refDate.getMonth() == new Date().getMonth() ? undefined : (
-            <IconButton icon={AiOutlineCaretRight} onClick={onNext} />
-          )}
-        </div>
+        <MonthStepper
+          onNext={onNext}
+          onPrevious={onPrevious}
+          refDate={refDate}
+        />
       </h6>
       <div
         className={`flex flex-col xl:grid ${
