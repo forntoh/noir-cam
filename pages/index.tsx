@@ -73,6 +73,7 @@ export default function Home({ isAdmin }: { isAdmin: boolean }) {
             </Card>
           ) : undefined}
         </div>
+        <div className="text-center font-semibold">View balance sheet</div>
         <PerMonthEarnings
           refDate={refDate}
           earnings={earningsPerModel}
