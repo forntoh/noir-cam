@@ -12,8 +12,8 @@ function HelpMenu() {
   return (
     <PopUpMenu renderButton={(open) => <FaRegUserCircle className="w-7 h-7" />}>
       <div className="p-2 min-w-max">
-        <Menu.Item as={MyLink} href="/about">
-          <div className="p-2">Ballance sheet</div>
+        <Menu.Item as={MyLink} href="/report">
+          <div className="p-2">View report</div>
         </Menu.Item>
         <Menu.Item
           as="div"
