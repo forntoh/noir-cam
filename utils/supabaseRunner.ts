@@ -15,7 +15,7 @@ export function runner<T>(
       if (error && status !== 406) throw error;
       setData(data);
     } catch (error: any) {
-      alert(JSON.stringify(error.message));
+      // alert(JSON.stringify(error.message));
       console.log(error);
     } finally {
       setLoading(false);
