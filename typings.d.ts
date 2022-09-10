@@ -21,6 +21,7 @@ export interface Debt {
   id: number;
   amount: number;
   created_at: string;
+  reason: string;
 }
 
 export interface ApiResponse<T> {
