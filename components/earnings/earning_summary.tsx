@@ -12,7 +12,7 @@ type Props = {
 
 function EarningSummary({ label, value, mCurrency, color }: Props) {
   const [currency] = useRecoilState(currencyAtom);
-  const amount = mCurrency ? value ?? 0 : converter(value, currency);
+  const amount = mCurrency ? Math.ceil(value ?? 0) : converter(value, currency);
 
   return (
     <EarningWrapper label={label}>
