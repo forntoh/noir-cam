@@ -10,10 +10,14 @@ export const converter = (
   value: number | undefined,
   currency: CurrencyType
 ) => {
+  let amt = 0;
   switch (currency) {
     case "Ksh":
-      return (value ?? 0) * 2;
+      amt = (value ?? 0) * 2;
+      break;
     default:
-      return value ?? 0;
+      amt = value ?? 0;
+      break;
   }
+  return Math.ceil(amt);
 };
