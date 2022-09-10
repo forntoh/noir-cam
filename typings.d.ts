@@ -17,6 +17,12 @@ export interface Earning {
   paidOut: boolean;
 }
 
+export interface Debt {
+  id: number;
+  amount: number;
+  created_at: string;
+}
+
 export interface ApiResponse<T> {
   data?: T;
   error?: ApiError;
