@@ -26,6 +26,11 @@ export const useEarningsForPeriod = () =>
     });
   });
 
+export const useEarningsMultiplier = () =>
+  runner<number>(() => {
+    return supabase.rpc("multiplier");
+  });
+
 export const useTopModelsForPeriod = () =>
   runner<TopModels[]>((start: Date, end: Date) => {
     return supabase.rpc("model_ranking_for_period", {
