@@ -63,7 +63,7 @@ export default function ModelDetails({ username }: Props) {
   }, [monthSelectEarnings]);
 
   return (
-    <PageWrapper>
+    <PageWrapper title={`Earnings for ${username}`}>
       <div className="container space-y-8 pb-8">
         <WelcomeBar />
         <Card>

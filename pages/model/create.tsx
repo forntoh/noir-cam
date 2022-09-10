@@ -46,7 +46,7 @@ export default function AddModel() {
   };
 
   return (
-    <PageWrapper>
+    <PageWrapper title="Create model">
       <div className="grow"></div>
       <form
         className="container space-y-10 pb-12"

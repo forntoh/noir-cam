@@ -44,7 +44,7 @@ export default function Home({ isAdmin }: { isAdmin: boolean }) {
   const earningsPerModel = _(earnings).groupBy((x) => x.username);
 
   return (
-    <PageWrapper>
+    <PageWrapper title="Home">
       <div className="container space-y-8 pb-8">
         <WelcomeBar />
         <div

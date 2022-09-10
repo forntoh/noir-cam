@@ -31,7 +31,7 @@ export default function Auth() {
   };
 
   return (
-    <PageWrapper>
+    <PageWrapper title="Login">
       <div className="grow"></div>
       <div className="container flex flex-col justify-end pb-12 gap-8">
         <p className="leading-6">
