@@ -31,8 +31,7 @@ export default function Report() {
   const [, earnings, loadEarnings] = useEarnings();
   const [, earningsForMonth, loadEarningsForMonth] = useEarningsForPeriod();
   const [, debtForMonth, loadDebtForMonth] = useDebtForPeriod();
-  const [, earningsMultiplier, loadEarningsMultiplier] =
-    useEarningsMultiplier();
+  const [, eMultiplier, loadEarningsMultiplier] = useEarningsMultiplier();
   const [, debt, loadDebt] = useDebt();
 
   useEffect(() => {
@@ -40,13 +39,10 @@ export default function Report() {
     loadEarningsForMonth(startOfMonth(refDate), endOfMonth(refDate));
     loadDebtForMonth(startOfMonth(refDate), endOfMonth(refDate));
     loadEarnings(undefined, startOfMonth(refDate), endOfMonth(refDate));
+    loadEarningsMultiplier(format(refDate, "yyyy-MM-01"));
   }, [refDate]);
 
-  useEffect(() => {
-    loadEarningsMultiplier();
-  });
-
-  const balance = () => (earningsForMonth ?? 0) * (earningsMultiplier ?? 0);
+  const balance = () => (earningsForMonth ?? 0) * (eMultiplier?.rate ?? 0);
   const profit = () => received() - converter(earningsForMonth, "Ksh");
   const received = () => balance() - (debtForMonth ?? 0);
 

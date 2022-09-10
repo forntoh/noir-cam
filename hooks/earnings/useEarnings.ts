@@ -27,8 +27,8 @@ export const useEarningsForPeriod = () =>
   });
 
 export const useEarningsMultiplier = () =>
-  runner<number>(() => {
-    return supabase.rpc("multiplier");
+  runner<{ rate: number }>((date: string) => {
+    return supabase.from("multiplier").select("rate").eq("date", date).single();
   });
 
 export const useTopModelsForPeriod = () =>
