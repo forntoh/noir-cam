@@ -46,6 +46,9 @@ export default function Report() {
   const profit = () => received() - converter(earningsForMonth, "Ksh");
   const received = () => rounder(balance() - (debtForMonth ?? 0), 1000);
 
+  const actualRate = () =>
+    ((received() + (debtForMonth ?? 0)) / (earningsForMonth ?? 0)).toFixed(5);
+
   const earningsPerModel = _(earnings).groupBy((x) => x.username);
 
   return (
@@ -96,7 +99,7 @@ export default function Report() {
           <Card>
             <ul>
               <li className="flex justify-between border-b-2 p-3 font-bold">
-                <span>Model</span>
+                <span>Model ({earningsForMonth?.toLocaleString()} tk)</span>
                 <span>Amount</span>
               </li>
               {earningsPerModel
@@ -145,6 +148,10 @@ export default function Report() {
               ) : undefined}
             </ul>
           </Card>
+        </div>
+        <div className="text-sm text-center">
+          Base rate: <b>{eMultiplier?.rate ?? 0}</b> — Actual rate:{" "}
+          <b>{actualRate()}</b>
         </div>
       </div>
     </PageWrapper>
