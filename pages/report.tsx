@@ -16,7 +16,7 @@ import Card from "../components/card";
 import { EarningSummary } from "../components/earnings";
 import { MonthStepper } from "../components/MonthStepper";
 import { PageWrapper } from "../components/PageWrapper";
-import { converter } from "../helpers/helpers";
+import { converter, rounder } from "../helpers/helpers";
 import { useDebt, useDebtForPeriod } from "../hooks/debt";
 import {
   useEarnings,
@@ -44,7 +44,7 @@ export default function Report() {
 
   const balance = () => (earningsForMonth ?? 0) * (eMultiplier?.rate ?? 0);
   const profit = () => received() - converter(earningsForMonth, "Ksh");
-  const received = () => balance() - (debtForMonth ?? 0);
+  const received = () => rounder(balance() - (debtForMonth ?? 0), 200);
 
   const earningsPerModel = _(earnings).groupBy((x) => x.username);
 
@@ -121,7 +121,7 @@ export default function Report() {
           <Card>
             <ul>
               <li className="flex justify-between border-b-2 p-3 font-bold">
-                <span>Date - reason</span>
+                <span>Date — reason</span>
                 <span>Amount</span>
               </li>
               {debt?.map((it, key) => (

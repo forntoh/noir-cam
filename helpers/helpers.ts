@@ -21,3 +21,7 @@ export const converter = (
   }
   return Math.ceil(amt);
 };
+
+export const rounder = (value: number, factor: number = 100) => {
+  return Math.ceil(value / factor) * factor;
+};
