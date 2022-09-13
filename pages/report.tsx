@@ -44,7 +44,7 @@ export default function Report() {
 
   const balance = () => (earningsForMonth ?? 0) * (eMultiplier?.rate ?? 0);
   const profit = () => received() - converter(earningsForMonth, "Ksh");
-  const received = () => rounder(balance() - (debtForMonth ?? 0), 200);
+  const received = () => rounder(balance() - (debtForMonth ?? 0), 1000);
 
   const earningsPerModel = _(earnings).groupBy((x) => x.username);
 
