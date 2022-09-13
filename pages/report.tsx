@@ -47,7 +47,7 @@ export default function Report() {
   const received = () => rounder(balance() - (debtForMonth ?? 0), 1000);
 
   const actualRate = () =>
-    ((received() + (debtForMonth ?? 0)) / (earningsForMonth ?? 0)).toFixed(5);
+    (received() + (debtForMonth ?? 0)) / (earningsForMonth ?? 0);
 
   const earningsPerModel = _(earnings).groupBy((x) => x.username);
 
@@ -150,8 +150,8 @@ export default function Report() {
           </Card>
         </div>
         <div className="text-sm text-center">
-          Base rate: <b>{eMultiplier?.rate ?? 0}</b> — Actual rate:{" "}
-          <b>{actualRate()}</b>
+          Base rate: <b>{eMultiplier?.rate.toFixed(2) ?? 0}</b> — Actual rate:{" "}
+          <b>{actualRate().toFixed(2)}</b>
         </div>
       </div>
     </PageWrapper>
