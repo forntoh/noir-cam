@@ -23,5 +23,6 @@ export const converter = (
 };
 
 export const rounder = (value: number, factor: number = 100) => {
+  if (value < factor) return Math.ceil(value);
   return Math.ceil(value / factor) * factor;
 };
