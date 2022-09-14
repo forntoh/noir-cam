@@ -36,20 +36,19 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             let item;
 
             for (const date of result) {
-              earnings.push(
-                await fetchStrip(
-                  username as string,
-                  item ?? date,
-                  nextMonday(date)
-                )
+              const earning = await fetchStrip(
+                username as string,
+                item ?? date,
+                nextMonday(date)
               );
+              if (earning.tokens != 0 || earning.tokens != undefined)
+                earnings.push(earning);
               item = nextMonday(date);
             }
 
-            // Save earnings data to Supabase
-            const { data, error } = await supbaseAdmin
-              .from("earnings")
-              .upsert(earnings);
+            if (earnings.length >= 0)
+              // Save earnings data to Supabase
+              await supbaseAdmin.from("earnings").upsert(earnings);
 
             res.status(200).json({});
           } else {
@@ -62,10 +61,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
               addDays(end, 1)
             );
 
-            // Save earnings data to Supabase
-            const { data, error } = await supbaseAdmin
-              .from("earnings")
-              .upsert(earning);
+            if (earning.tokens != 0)
+              // Save earnings data to Supabase
+              await supbaseAdmin.from("earnings").upsert(earning);
 
             res.status(200).json(earning);
           }
