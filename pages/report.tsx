@@ -53,7 +53,7 @@ export default function Report() {
 
   return (
     <PageWrapper title={`Report ${format(refDate, "MM-yyyy")}`}>
-      <div className="container space-y-6 pb-8">
+      <div className="container space-y-6 xl:space-y-10 pb-8">
         <div className="space-y-3">
           <h5 className="flex items-center justify-between">
             Report for
@@ -63,7 +63,7 @@ export default function Report() {
               refDate={refDate}
             />
           </h5>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-3 xl:gap-6">
             <Card className="p-3">
               <EarningSummary
                 label={`Balance • ${format(refDate, "MMM yyyy")}`}
@@ -94,60 +94,65 @@ export default function Report() {
             </Card>
           </div>
         </div>
-        <div className="space-y-3">
-          <h6>Payout summary</h6>
-          <Card>
-            <ul>
-              <li className="flex justify-between border-b-2 p-3 font-bold">
-                <span>Model ({earningsForMonth?.toLocaleString()} tk)</span>
-                <span>Amount</span>
-              </li>
-              {earningsPerModel
-                ?.map((value, key) => (
-                  <li className="flex justify-between px-3 py-2" key={key}>
-                    <span>{key}</span>
+        <div className="gap-6 xl:gap-y-9 grid xl:grid-cols-2">
+          <div className="space-y-3 xl:space-y-5 flex flex-col">
+            <h6>Payout summary</h6>
+            <Card className="grow">
+              <ul>
+                <li className="flex justify-between border-b-2 p-3 xl:py-4 font-bold">
+                  <span>Model ({earningsForMonth?.toLocaleString()} tk)</span>
+                  <span>Amount</span>
+                </li>
+                {earningsPerModel
+                  ?.map((value, key) => (
+                    <li
+                      className="flex justify-between px-3 py-2 xl:py-3"
+                      key={key}
+                    >
+                      <span>{key}</span>
+                      <span className="font-semibold">
+                        {converter(
+                          value.reduce((a, e) => a + e.tokens, 0),
+                          "Ksh"
+                        ).toLocaleString()}{" "}
+                        Ksh
+                      </span>
+                    </li>
+                  ))
+                  .value()}
+              </ul>
+            </Card>
+          </div>
+          <div className="space-y-3 xl:space-y-5 flex flex-col">
+            <h6>Debt summary</h6>
+            <Card className="grow">
+              <ul className="h-full">
+                <li className="flex justify-between border-b-2 p-3 xl:py-4 font-bold">
+                  <span>Date — reason</span>
+                  <span>Amount</span>
+                </li>
+                {debt?.map((it, key) => (
+                  <li
+                    className="flex justify-between items-center px-3 py-2 xl:py-3"
+                    key={key}
+                  >
+                    <div className=" text-sm">
+                      <span>{format(parseISO(it.created_at), "iii d")} — </span>
+                      <span>{it.reason}</span>
+                    </div>
                     <span className="font-semibold">
-                      {converter(
-                        value.reduce((a, e) => a + e.tokens, 0),
-                        "Ksh"
-                      ).toLocaleString()}{" "}
-                      Ksh
+                      {it.amount.toLocaleString()} Ksh
                     </span>
                   </li>
-                ))
-                .value()}
-            </ul>
-          </Card>
-        </div>
-        <div className="space-y-3">
-          <h6>Debt summary</h6>
-          <Card>
-            <ul>
-              <li className="flex justify-between border-b-2 p-3 font-bold">
-                <span>Date — reason</span>
-                <span>Amount</span>
-              </li>
-              {debt?.map((it, key) => (
-                <li
-                  className="flex justify-between items-center px-3 py-2"
-                  key={key}
-                >
-                  <div className=" text-sm">
-                    <span>{format(parseISO(it.created_at), "iii d")} — </span>
-                    <span>{it.reason}</span>
-                  </div>
-                  <span className="font-semibold">
-                    {it.amount.toLocaleString()} Ksh
-                  </span>
-                </li>
-              ))}
-              {(debt?.length ?? 0) <= 0 ? (
-                <div className="p-3 text-center">
-                  No debt for {format(refDate, "MMM yyyy")}
-                </div>
-              ) : undefined}
-            </ul>
-          </Card>
+                ))}
+                {(debt?.length ?? 0) <= 0 ? (
+                  <li className="p-3 text-center my-auto">
+                    No debt for {format(refDate, "MMM yyyy")}
+                  </li>
+                ) : undefined}
+              </ul>
+            </Card>
+          </div>
         </div>
         <div className="text-sm text-center">
           Base rate: <b>{eMultiplier?.rate.toFixed(2) ?? 0}</b> — Actual rate:{" "}

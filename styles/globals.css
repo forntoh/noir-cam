@@ -30,7 +30,7 @@
   }
 
   h3 {
-    @apply text-2xl md:text-4xl font-extrabold md:font-bold;
+    @apply text-2xl leading-7 md:text-4xl font-extrabold md:font-bold;
   }
 
   h4 {
