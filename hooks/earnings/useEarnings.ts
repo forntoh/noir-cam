@@ -18,13 +18,16 @@ export const useEarnings = () =>
   });
 
 export const useEarningsForPeriod = () =>
-  runner<number>((start: Date, end: Date, username: string) => {
-    return supabase.rpc("earnings_for_period", {
-      a: start,
-      b: end,
-      uname: username,
-    });
-  });
+  runner<number>(
+    (start: Date, end: Date, c: boolean = false, username: string) => {
+      return supabase.rpc("earnings_for_period", {
+        a: start,
+        b: end,
+        uname: username,
+        c: c,
+      });
+    }
+  );
 
 export const useEarningsMultiplier = () =>
   runner<{ rate: number; model_rate: number }>((date: string) => {

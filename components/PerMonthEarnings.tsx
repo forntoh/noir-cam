@@ -9,6 +9,7 @@ type Props = {
   earnings?: Object<Dictionary<Earning[]>>;
   showMonth?: boolean;
   title: string;
+  modelRate: number | undefined;
 } & MonthStepperProps;
 
 export const PerMonthEarnings = ({
@@ -18,6 +19,7 @@ export const PerMonthEarnings = ({
   earnings,
   showMonth = false,
   title,
+  modelRate = 2,
 }: Props) => {
   return (
     <div className="space-y-5">
@@ -44,6 +46,7 @@ export const PerMonthEarnings = ({
               key={key}
               earnings={value}
               month={showMonth ? key : undefined}
+              modelRate={modelRate}
             />
           ))
           .value()}

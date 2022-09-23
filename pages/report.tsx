@@ -43,7 +43,8 @@ export default function Report() {
   }, [refDate]);
 
   const balance = () => (earningsForMonth ?? 0) * (eMultiplier?.rate ?? 0);
-  const profit = () => received() - converter(earningsForMonth, "Ksh");
+  const profit = () =>
+    received() - converter(earningsForMonth, "Ksh", eMultiplier?.model_rate);
   const received = () => rounder(balance() - (debtForMonth ?? 0), 500);
 
   const actualRate = () =>
@@ -113,7 +114,8 @@ export default function Report() {
                       <span className="font-semibold">
                         {converter(
                           value.reduce((a, e) => a + e.tokens, 0),
-                          "Ksh"
+                          "Ksh",
+                          eMultiplier?.model_rate
                         ).toLocaleString()}{" "}
                         Ksh
                       </span>

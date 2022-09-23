@@ -14,32 +14,49 @@ import {
 } from "date-fns";
 import _ from "lodash";
 import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
 import Card from "../components/card";
 import { EarningSummary, TopModels } from "../components/earnings";
 import { PageWrapper } from "../components/PageWrapper";
 import { PerMonthEarnings } from "../components/PerMonthEarnings";
 import WelcomeBar from "../components/welcome_bar";
-import { useEarnings, useEarningsForPeriod } from "../hooks/earnings";
+import { currencyAtom } from "../helpers/helpers";
+import {
+  useEarnings,
+  useEarningsForPeriod,
+  useEarningsMultiplier,
+} from "../hooks/earnings";
 
 const now = new Date();
 
 export default function Home({ isAdmin }: { isAdmin: boolean }) {
   const [refDate, setRefDate] = useState(now);
+  const [currency] = useRecoilState(currencyAtom);
 
   const [, earnings, loadEarnings] = useEarnings();
   const [, earningsForMonth, loadEarningsForMonth] = useEarningsForPeriod();
   const [, earningsForWeek, loadEarningsForWeek] = useEarningsForPeriod();
   const [, allEarnings, loadAllEarnings] = useEarningsForPeriod();
+  const [, eMultiplier, loadEarningsMultiplier] = useEarningsMultiplier();
 
   useEffect(() => {
     loadEarnings(undefined, startOfMonth(refDate), endOfMonth(refDate));
-    loadEarningsForMonth(startOfMonth(refDate), endOfMonth(refDate));
+    loadEarningsMultiplier(format(refDate, "yyyy-MM-01"));
+  }, [refDate]);
+
+  useEffect(() => {
+    loadEarningsForMonth(
+      startOfMonth(refDate),
+      endOfMonth(refDate),
+      currency == "Ksh"
+    );
     loadEarningsForWeek(
       startOfWeek(now, { weekStartsOn: 1 }),
-      endOfWeek(now, { weekStartsOn: 1 })
+      endOfWeek(now, { weekStartsOn: 1 }),
+      currency == "Ksh"
     );
-    loadAllEarnings(subYears(now, 5), now);
-  }, [refDate]);
+    loadAllEarnings(subYears(now, 1), now, currency == "Ksh");
+  }, [refDate, currency]);
 
   const earningsPerModel = _(earnings).groupBy((x) => x.username);
 
@@ -56,16 +73,22 @@ export default function Home({ isAdmin }: { isAdmin: boolean }) {
             <EarningSummary
               label="Earnings • this week"
               value={earningsForWeek}
+              mCurrency={currency}
             />
           </Card>
           <Card className="p-3">
             <EarningSummary
               label={`Earnings • ${format(refDate, "MMM yyyy")}`}
               value={earningsForMonth}
+              mCurrency={currency}
             />
           </Card>
           <Card className={`p-3 ${isAdmin ? "" : "col-span-2"}`}>
-            <EarningSummary label="Total earnings" value={allEarnings} />
+            <EarningSummary
+              label="Total earnings"
+              value={allEarnings}
+              mCurrency={currency}
+            />
           </Card>
           {isAdmin ? (
             <Card className="p-3">
@@ -79,6 +102,7 @@ export default function Home({ isAdmin }: { isAdmin: boolean }) {
           title={isAdmin ? "Earnings per model" : "Earnings"}
           onNext={() => setRefDate(subMonths(refDate, -1))}
           onPrevious={() => setRefDate(subMonths(refDate, 1))}
+          modelRate={eMultiplier?.model_rate}
           showMonth={!isAdmin}
         />
       </div>

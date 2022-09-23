@@ -8,12 +8,13 @@ export const currencyAtom = atom<CurrencyType>({
 
 export const converter = (
   value: number | undefined,
-  currency: CurrencyType
+  currency: CurrencyType,
+  rate: number | undefined
 ) => {
   let amt = 0;
   switch (currency) {
     case "Ksh":
-      amt = (value ?? 0) * 2;
+      amt = (value ?? 0) * (rate ?? 2);
       break;
     default:
       amt = value ?? 0;

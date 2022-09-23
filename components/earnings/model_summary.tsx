@@ -8,14 +8,16 @@ import MyLink from "../link";
 type Props = {
   month?: string;
   earnings?: Earning[];
+  modelRate: number | undefined;
 };
 
-const ModelSummary = ({ earnings, month }: Props) => {
+const ModelSummary = ({ earnings, month, modelRate = 2 }: Props) => {
   const [currency] = useRecoilState(currencyAtom);
 
   const total = converter(
     earnings?.reduce((partialSum, a) => partialSum + a.tokens, 0) ?? 0,
-    currency
+    currency,
+    modelRate
   );
 
   return (
@@ -41,7 +43,8 @@ const ModelSummary = ({ earnings, month }: Props) => {
               {formatStringDate(it.periodEnd)}
             </div>
             <div>
-              {converter(it.tokens, currency).toLocaleString()} {currency}
+              {converter(it.tokens, currency, modelRate).toLocaleString()}{" "}
+              {currency}
             </div>
           </li>
         ))}
