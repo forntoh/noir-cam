@@ -157,8 +157,10 @@ export default function Report() {
           </div>
         </div>
         <div className="text-sm text-center">
-          Base rate: <b>{eMultiplier?.rate.toFixed(2) ?? 0}</b> — Actual rate:{" "}
-          <b>{actualRate().toFixed(2)}</b>
+          Base rate: <b>{eMultiplier?.rate.toFixed(2) ?? 0}x</b> — Actual rate:{" "}
+          <b>{actualRate().toFixed(2)}x</b>
+          <br />
+          Model payout multiplier: <b>{eMultiplier?.model_rate.toFixed(2)}x</b>
         </div>
       </div>
     </PageWrapper>
