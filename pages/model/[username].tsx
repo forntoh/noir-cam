@@ -13,6 +13,7 @@ import {
 import _, { Dictionary, Object } from "lodash";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
+import { useEffectOnce } from "usehooks-ts";
 import Card from "../../components/card";
 import { EarningSummary } from "../../components/earnings";
 import { PageWrapper } from "../../components/PageWrapper";
@@ -47,18 +48,21 @@ export default function ModelDetails({ username }: Props) {
   const [earningsGrouped, setEarningsGrouped] =
     useState<Object<Dictionary<Earning[]>>>();
 
-  useEffect(() => {
+  useEffectOnce(() => {
     loadModel(username);
-    loadMonthEarnings(
-      startOfMonth(now),
-      endOfMonth(now),
-      currency == "Ksh",
-      username
-    );
+  });
+
+  useEffect(() => {
     loadAllEarnings(subYears(now, 5), now, currency == "Ksh", username);
   }, [currency]);
 
   useEffect(() => {
+    loadMonthEarnings(
+      startOfMonth(refDate),
+      endOfMonth(refDate),
+      undefined,
+      username
+    );
     loadSelectMonthEarnings(
       username,
       startOfMonth(refDate),
