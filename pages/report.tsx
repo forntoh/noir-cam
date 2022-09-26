@@ -203,6 +203,14 @@ export default function Report() {
           <b>{actualRate().toFixed(2)}x</b>
           <br />
           Model payout multiplier: <b>{eMultiplier?.model_rate.toFixed(2)}x</b>
+          <br />
+          <br />
+          <span>
+            Profit:{" "}
+            <b className="text-teal-600">
+              {Math.round((profit() / total()) * 100)}%
+            </b>
+          </span>
         </div>
       </div>
     </PageWrapper>
