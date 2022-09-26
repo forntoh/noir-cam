@@ -19,6 +19,7 @@ import { MonthStepper } from "../components/MonthStepper";
 import { PageWrapper } from "../components/PageWrapper";
 import { converter, rounder } from "../helpers/helpers";
 import { useDebt, useDebtForPeriod } from "../hooks/debt";
+import { useEarlyPaymentForPeriod } from "../hooks/debt/useDebt";
 import {
   useEarnings,
   useEarningsForPeriod,
@@ -33,6 +34,7 @@ export default function Report() {
   const [, earnings, loadEarnings] = useEarnings();
   const [, earningsForMonth, loadEarningsForMonth] = useEarningsForPeriod();
   const [, debtForMonth, loadDebtForMonth] = useDebtForPeriod();
+  const [, earlyPayment, loadEarlyPaymentForMonth] = useEarlyPaymentForPeriod();
   const [, eMultiplier, loadEarningsMultiplier] = useEarningsMultiplier();
   const [, debt, loadDebt] = useDebt();
 
@@ -42,19 +44,24 @@ export default function Report() {
     loadDebt(startOfMonth(refDate), endOfMonth(refDate));
     loadEarningsForMonth(startOfMonth(refDate), endOfMonth(refDate));
     loadDebtForMonth(startOfMonth(refDate), endOfMonth(refDate));
+    loadEarlyPaymentForMonth(startOfMonth(refDate), endOfMonth(refDate));
     loadEarnings(undefined, startOfMonth(refDate), endOfMonth(refDate));
     loadEarningsMultiplier(format(refDate, "yyyy-MM-01"));
   }, [refDate, onChange]);
 
-  const balance = () => (earningsForMonth ?? 0) * (eMultiplier?.rate ?? 0);
+  const total = () => (earningsForMonth ?? 0) * (eMultiplier?.rate ?? 0);
   const profit = () =>
-    received() - converter(earningsForMonth, "Ksh", eMultiplier?.model_rate);
-  const received = () => rounder(balance() - (debtForMonth ?? 0), 500);
+    rounder(total(), 500) -
+    converter(earningsForMonth, "Ksh", eMultiplier?.model_rate) -
+    (debtForMonth ?? 0);
+  const balance = () =>
+    rounder(total(), 500) - (earlyPayment ?? 0) - (debtForMonth ?? 0);
 
-  const actualRate = () =>
-    (received() + (debtForMonth ?? 0)) / (earningsForMonth ?? 0);
+  const actualRate = () => rounder(total(), 500) / (earningsForMonth ?? 0);
 
   const earningsPerModel = _(earnings).groupBy((x) => x.username);
+
+  const debts = _(debt).groupBy((x) => x.reason == "Early payment");
 
   return (
     <PageWrapper title={`Report ${format(refDate, "MM-yyyy")}`}>
@@ -71,8 +78,8 @@ export default function Report() {
           <div className="grid grid-cols-2 gap-3 xl:gap-6">
             <Card className="p-3">
               <EarningSummary
-                label={`Balance • ${format(refDate, "MMM yyyy")}`}
-                value={balance()}
+                label={`Total • ${format(refDate, "MMM yyyy")}`}
+                value={total()}
                 mCurrency="Ksh"
               />
             </Card>
@@ -91,15 +98,15 @@ export default function Report() {
                 color="text-teal-600"
               />
               <EarningSummary
-                label={`To receive • ${format(refDate, "MMM yyyy")}`}
-                value={received()}
+                label={`Balance • ${format(refDate, "MMM yyyy")}`}
+                value={balance()}
                 mCurrency="Ksh"
                 color="text-indigo-600"
               />
             </Card>
           </div>
         </div>
-        <div className="gap-6 xl:gap-y-9 grid xl:grid-cols-2">
+        <div className="gap-6 xl:gap-y-9 grid xl:grid-cols-3">
           <div className="space-y-3 xl:space-y-5 flex flex-col">
             <h6>Payout summary</h6>
             <Card className="grow">
@@ -132,6 +139,35 @@ export default function Report() {
             </Card>
           </div>
           <div className="space-y-3 xl:space-y-5 flex flex-col">
+            <h6>Widthdrawals</h6>
+            <Card className="grow">
+              <ul>
+                <li className="flex justify-between border-b-2 p-3 xl:py-4 font-bold">
+                  <span>Date</span>
+                  <span>Amount</span>
+                </li>
+                {debts?.get("true")?.map((it, key) => (
+                  <li
+                    className="flex justify-between items-center px-3 py-2 xl:py-3"
+                    key={key}
+                  >
+                    <div className=" text-sm">
+                      <span>{format(parseISO(it.created_at), "iii d")}</span>
+                    </div>
+                    <span className="font-semibold">
+                      {it.amount.toLocaleString()} Ksh
+                    </span>
+                  </li>
+                ))}
+                {(debts?.get("true")?.length ?? 0) <= 0 ? (
+                  <li className="p-3 text-center my-auto">
+                    No widthdrawals for {format(refDate, "MMM yyyy")}
+                  </li>
+                ) : undefined}
+              </ul>
+            </Card>
+          </div>
+          <div className="space-y-3 xl:space-y-5 flex flex-col">
             <h6>Debt summary</h6>
             <Card className="grow">
               <ul className="h-full">
@@ -139,7 +175,7 @@ export default function Report() {
                   <span>Date — reason</span>
                   <span>Amount</span>
                 </li>
-                {debt?.map((it, key) => (
+                {debts?.get("false")?.map((it, key) => (
                   <li
                     className="flex justify-between items-center px-3 py-2 xl:py-3"
                     key={key}
@@ -153,7 +189,7 @@ export default function Report() {
                     </span>
                   </li>
                 ))}
-                {(debt?.length ?? 0) <= 0 ? (
+                {(debts?.get("false")?.length ?? 0) <= 0 ? (
                   <li className="p-3 text-center my-auto">
                     No debt for {format(refDate, "MMM yyyy")}
                   </li>
