@@ -26,6 +26,7 @@ import {
   useEarningsForPeriod,
   useEarningsMultiplier,
 } from "../hooks/earnings";
+import useSubscribeToCanges from "../hooks/useSubsribeToCanges";
 
 const now = new Date();
 
@@ -39,10 +40,12 @@ export default function Home({ isAdmin }: { isAdmin: boolean }) {
   const [, allEarnings, loadAllEarnings] = useEarningsForPeriod();
   const [, eMultiplier, loadEarningsMultiplier] = useEarningsMultiplier();
 
+  const onChange = useSubscribeToCanges("earnings");
+
   useEffect(() => {
     loadEarnings(undefined, startOfMonth(refDate), endOfMonth(refDate));
     loadEarningsMultiplier(format(refDate, "yyyy-MM-01"));
-  }, [refDate]);
+  }, [refDate, onChange]);
 
   useEffect(() => {
     loadEarningsForMonth(
@@ -56,7 +59,7 @@ export default function Home({ isAdmin }: { isAdmin: boolean }) {
       currency == "Ksh"
     );
     loadAllEarnings(subYears(now, 1), now, currency == "Ksh");
-  }, [refDate, currency]);
+  }, [refDate, currency, onChange]);
 
   const earningsPerModel = _(earnings).groupBy((x) => x.username);
 

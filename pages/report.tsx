@@ -14,6 +14,7 @@ import _ from "lodash";
 import { useEffect, useState } from "react";
 import Card from "../components/card";
 import { EarningSummary } from "../components/earnings";
+import MyLink from "../components/link";
 import { MonthStepper } from "../components/MonthStepper";
 import { PageWrapper } from "../components/PageWrapper";
 import { converter, rounder } from "../helpers/helpers";
@@ -23,6 +24,7 @@ import {
   useEarningsForPeriod,
   useEarningsMultiplier,
 } from "../hooks/earnings";
+import useSubscribeToCanges from "../hooks/useSubsribeToCanges";
 
 const now = new Date();
 
@@ -34,13 +36,15 @@ export default function Report() {
   const [, eMultiplier, loadEarningsMultiplier] = useEarningsMultiplier();
   const [, debt, loadDebt] = useDebt();
 
+  const onChange = useSubscribeToCanges("earnings");
+
   useEffect(() => {
     loadDebt(startOfMonth(refDate), endOfMonth(refDate));
     loadEarningsForMonth(startOfMonth(refDate), endOfMonth(refDate));
     loadDebtForMonth(startOfMonth(refDate), endOfMonth(refDate));
     loadEarnings(undefined, startOfMonth(refDate), endOfMonth(refDate));
     loadEarningsMultiplier(format(refDate, "yyyy-MM-01"));
-  }, [refDate]);
+  }, [refDate, onChange]);
 
   const balance = () => (earningsForMonth ?? 0) * (eMultiplier?.rate ?? 0);
   const profit = () =>
@@ -110,7 +114,9 @@ export default function Report() {
                       className="flex justify-between px-3 py-2 xl:py-3"
                       key={key}
                     >
-                      <span>{key}</span>
+                      <MyLink href={`/model/${key}`} className="cursor-pointer">
+                        {key}
+                      </MyLink>
                       <span className="font-semibold">
                         {converter(
                           value.reduce((a, e) => a + e.tokens, 0),
