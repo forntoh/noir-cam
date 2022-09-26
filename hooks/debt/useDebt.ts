@@ -22,3 +22,11 @@ export const useDebtForPeriod = () =>
       b: end,
     });
   });
+
+export const useEarlyPaymentForPeriod = () =>
+  runner<number | null | undefined>((start: Date, end: Date) => {
+    return supabase.rpc("early_payment_for_period", {
+      a: start,
+      b: end,
+    });
+  });
