@@ -55,7 +55,7 @@ export const modelEarningsSummary = async (
       })
     )
     .do((d) => {
-      d.moveDown(3)
+      d.moveDown(2)
         .fontSize(10)
         .fillColor("#c6c6c6")
         .font("SemiBold")
