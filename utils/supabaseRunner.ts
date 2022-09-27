@@ -25,6 +25,19 @@ export function runner<T>(
   return [loading, data, loadData];
 }
 
+export async function runnerAsync<T>(
+  fn: () => PromiseLike<PostgrestSingleResponse<any>>
+): Promise<T | undefined> {
+  try {
+    let { data, error, status } = await fn();
+    if (error && status !== 406) throw error;
+    return data;
+  } catch (error: any) {
+    console.log(error);
+    return undefined;
+  }
+}
+
 export function upsert<T>(table: string, minimal: boolean = true) {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<T[]>();
@@ -33,9 +46,11 @@ export function upsert<T>(table: string, minimal: boolean = true) {
     try {
       setLoading(true);
 
-      let { data, error } = await supabase.from(table).upsert(updates, {
-        returning: minimal ? "minimal" : "representation",
-      });
+      let { data, error } = await supabase
+        .from(table)
+        .upsert(updates as Partial<any>, {
+          returning: minimal ? "minimal" : "representation",
+        });
 
       if (error) throw error;
       if (data && !minimal) setData(data);
