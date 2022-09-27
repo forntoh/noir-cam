@@ -83,7 +83,7 @@ export class NCDocument {
       .font("SemiBold")
       .fontSize(10)
       .fillColor(this.lineColor)
-      .text("MODEL");
+      .text(heading[0].label);
 
     for (let i = 1; i < heading.length - 1; i++) {
       this.mDoc.moveUp().text(heading[i].label, this.mDoc.x + heading[i - 1].w);
@@ -106,5 +106,24 @@ export class NCDocument {
       .lineTo(this.mDoc.page.width - this.MARGIN_H, this.mDoc.y + gap)
       .stroke(this.lineColor);
     return this;
+  }
+
+  end() {
+    this.mDoc.page.margins.bottom = 0;
+    this.mDoc.y = this.mDoc.page.height - this.MARGIN_V;
+    this.mDoc
+      .fontSize(10)
+      .fillColor(this.lineColor)
+      .font("Regular")
+      .text(`© ${format(new Date(), "yyyy")} — NoirCam Studio`, {
+        align: "right",
+      })
+      .moveUp()
+      .text("noircam.studio", this.MARGIN_H, this.mDoc.y, {
+        align: "left",
+        link: `https://${process.env.VERCEL_URL}`,
+      })
+      .text("", 50, 50);
+    this.mDoc.end();
   }
 }
