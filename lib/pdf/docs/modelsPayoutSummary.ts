@@ -80,7 +80,7 @@ export const modelsPayoutSummary = async (
     })
     .drawHr(30);
 
-  doc.doc().end();
+  doc.end();
 
   return path;
 };
