@@ -24,6 +24,7 @@ export const sendMail = async ({ body, ...props }: MailOptions) => {
   let info = await transporter.sendMail({
     ...props,
     text: body,
+    from,
   });
   return info;
 };
