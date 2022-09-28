@@ -1,6 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { format, parse } from "date-fns";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { sendMail } from "../../../lib/mail";
 import { modelEarningsSummary } from "../../../lib/pdf/docs/modelEarningsSummary";
 import { modelsPayoutSummary } from "../../../lib/pdf/docs/modelsPayoutSummary";
 
@@ -16,6 +17,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       : new Date();
     const title = username ? "Earnings Summary" : "Model Payout Summary";
     const subject = `${title} ${format(month, "MM-yyyy")}`;
+    const fileName = username
+      ? `${title} ${format(month, "MM-yyyy")}`
+      : `[${username}] - ${title} ${format(month, "MM-yyyy")}`;
 
     let buffer;
 
@@ -25,17 +29,20 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       buffer = await modelsPayoutSummary(title, month);
     }
 
-    // await sendMail({
-    //   to: to as string,
-    //   cc: cc as string | undefined,
-    //   subject,
-    //   attachments: [path],
-    // });
-
-    // fs.unlinkSync(filePath);
+    const info = await sendMail({
+      to: to as string,
+      cc: cc as string | undefined,
+      subject,
+      attachments: [
+        {
+          filename: fileName,
+          content: buffer,
+        },
+      ],
+    });
 
     // res.setHeader("Content-type", "application/pdf");
-    res.status(200).json([req.headers["secret"], date]);
+    res.status(200).send(info);
   } catch (error) {
     res.status(500).send(error);
   }
