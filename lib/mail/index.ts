@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import Mail from "nodemailer/lib/mailer";
 
 const from = `"NoirCam Studio" <${process.env.NODEMAILER_USER}>`;
 
@@ -16,29 +17,13 @@ type MailOptions = {
   cc?: string;
   subject: string;
   body?: string;
-  attachments?: string[];
+  attachments?: Mail.Attachment[];
 };
 
-export const sendMail = async ({
-  to,
-  cc,
-  subject,
-  body,
-  attachments,
-}: MailOptions) => {
-  // send mail with defined transport object
+export const sendMail = async ({ body, ...props }: MailOptions) => {
   let info = await transporter.sendMail({
-    from,
-    to,
-    subject,
-    cc,
+    ...props,
     text: body,
-    attachments: attachments?.map((it) => {
-      return {
-        path: it,
-      };
-    }),
   });
-
   return info;
 };
