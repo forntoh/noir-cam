@@ -11,8 +11,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     query: { date, username, to, cc },
   } = req;
 
-  console.log(req.headers["secret"]);
-
   try {
     const title = username ? "Earnings Summary" : "Model Payout Summary";
     const month = date
@@ -38,7 +36,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     // fs.unlinkSync(filePath);
 
     // res.setHeader("Content-type", "application/pdf");
-    res.status(200).send(req.headers["secret"]);
+    res.status(200).json([req.headers["secret"], date]);
   } catch (error) {
     res.status(200).end(error);
   }
