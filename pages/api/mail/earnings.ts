@@ -9,8 +9,13 @@ import { modelsPayoutSummary } from "../../../lib/pdf/docs/modelsPayoutSummary";
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const {
     body: { date, username, to, cc },
-    method,
+    headers,
   } = req;
+
+  if (headers["secret"] != process.env.NEXT_PUBLIC_API_SECRET) {
+    res.status(401).end("Unauthorized");
+    return;
+  }
 
   try {
     const month = date
