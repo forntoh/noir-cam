@@ -1,4 +1,5 @@
 import { format } from "date-fns";
+import getStream from "get-stream";
 import PDFDocument from "pdfkit";
 
 export class NCDocument {
@@ -108,7 +109,7 @@ export class NCDocument {
     return this;
   }
 
-  end() {
+  async end() {
     this.mDoc.page.margins.bottom = 0;
     this.mDoc.y = this.mDoc.page.height - this.MARGIN_V;
     this.mDoc
@@ -125,5 +126,6 @@ export class NCDocument {
       })
       .text("", 50, 50);
     this.mDoc.end();
+    return getStream.buffer(this.mDoc);
   }
 }
