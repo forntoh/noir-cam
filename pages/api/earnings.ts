@@ -13,8 +13,9 @@ import supbaseAdmin from "../../utils/supabaseAdmin";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const {
-    query: { username, start_date, secret },
+    body: { username, start_date },
     method,
+    headers: { secret },
   } = req;
   if (secret != process.env.NEXT_PUBLIC_API_SECRET) {
     res.status(401).json("Unauthorized");
