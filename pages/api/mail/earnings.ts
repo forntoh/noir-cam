@@ -12,10 +12,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   } = req;
 
   try {
-    const title = username ? "Earnings Summary" : "Model Payout Summary";
     const month = date
       ? parse(date as string, "yyyy-MM-dd", new Date())
       : new Date();
+    const title = username ? "Earnings Summary" : "Model Payout Summary";
     const subject = `${title} ${format(month, "MM-yyyy")}`;
 
     let buffer;
@@ -38,6 +38,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     // res.setHeader("Content-type", "application/pdf");
     res.status(200).json([req.headers["secret"], date]);
   } catch (error) {
-    res.status(200).end(error);
+    res.status(500).send(error);
   }
 };
