@@ -1,16 +1,12 @@
 import { endOfMonth, format, nextWednesday, startOfMonth } from "date-fns";
-import fs from "fs";
 import _ from "lodash";
 import { getEarnings, getEarningsMultiplier } from "../../api";
 import { NCDocument } from "../NCDocument";
-import { buildPath } from "./helpers.docs";
 
 export const modelsPayoutSummary = async (
   title: string,
   month: Date = new Date()
 ) => {
-  const path = buildPath(`${title} ${format(month, "MM-yyyy")}`);
-
   const earnings = await getEarnings(
     undefined,
     startOfMonth(month),
@@ -22,8 +18,6 @@ export const modelsPayoutSummary = async (
   const earningsPerModel = _(earnings).groupBy((x) => x.username);
 
   const doc = new NCDocument(title);
-
-  doc.doc().pipe(fs.createWriteStream(path));
 
   doc
     .registerFonts()
@@ -79,8 +73,5 @@ export const modelsPayoutSummary = async (
         );
     })
     .drawHr(30);
-
-  doc.end();
-
-  return path;
+  return doc.end();
 };

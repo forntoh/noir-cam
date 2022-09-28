@@ -1,17 +1,13 @@
 import { endOfMonth, format, nextWednesday, startOfMonth } from "date-fns";
-import fs from "fs";
 import { formatStringDate } from "../../../utils/constants";
 import { getEarnings, getEarningsMultiplier } from "../../api";
 import { NCDocument } from "../NCDocument";
-import { buildPath } from "./helpers.docs";
 
 export const modelEarningsSummary = async (
   title: string,
   username: string,
   month: Date = new Date()
 ) => {
-  const path = buildPath(`[${username}]-${title} ${format(month, "MM-yyyy")}`);
-
   const earnings = await getEarnings(
     username,
     startOfMonth(month),
@@ -21,8 +17,6 @@ export const modelEarningsSummary = async (
   const multiplier = await getEarningsMultiplier(month);
 
   const doc = new NCDocument(title);
-
-  doc.doc().pipe(fs.createWriteStream(path));
 
   doc
     .registerFonts()
@@ -84,8 +78,5 @@ export const modelEarningsSummary = async (
         );
     })
     .drawHr(30);
-
-  doc.end();
-
-  return path;
+  return doc.end();
 };
