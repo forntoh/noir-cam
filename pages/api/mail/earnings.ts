@@ -6,9 +6,8 @@ import { modelsPayoutSummary } from "../../../lib/pdf/docs/modelsPayoutSummary";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const {
-    body,
+    body: { date, username, to, cc },
     method,
-    query: { date, username, to, cc },
   } = req;
 
   try {
