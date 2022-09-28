@@ -2,6 +2,7 @@
 import { format, parse } from "date-fns";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { sendMail } from "../../../lib/mail";
+import { buildFileName } from "../../../lib/pdf/docs/helpers.docs";
 import { modelEarningsSummary } from "../../../lib/pdf/docs/modelEarningsSummary";
 import { modelsPayoutSummary } from "../../../lib/pdf/docs/modelsPayoutSummary";
 
@@ -17,9 +18,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       : new Date();
     const title = username ? "Earnings Summary" : "Model Payout Summary";
     const subject = `${title} ${format(month, "MM-yyyy")}`;
-    const fileName = username
-      ? `${title} ${format(month, "MM-yyyy")}`
-      : `[${username}] - ${title} ${format(month, "MM-yyyy")}`;
+    const fileName = buildFileName(
+      username
+        ? `${title} ${format(month, "MM-yyyy")}`
+        : `[${username}] - ${title} ${format(month, "MM-yyyy")}`
+    );
 
     let buffer;
 
