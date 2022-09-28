@@ -32,11 +32,11 @@ export class NCDocument {
 
   registerFonts() {
     this.mDoc
-      .registerFont("Bold", "lib/pdf/fonts/Montserrat-Bold.ttf")
-      .registerFont("ExtraBold", "lib/pdf/fonts/Montserrat-ExtraBold.ttf")
-      .registerFont("SemiBold", "lib/pdf/fonts/Montserrat-SemiBold.ttf")
-      .registerFont("Regular", "lib/pdf/fonts/Montserrat-Regular.ttf")
-      .registerFont("Medium", "lib/pdf/fonts/Montserrat-Medium.ttf");
+      .registerFont("Bold", "./public/fonts/Montserrat-Bold.ttf")
+      .registerFont("ExtraBold", "./public/fonts/Montserrat-ExtraBold.ttf")
+      .registerFont("SemiBold", "./public/fonts/Montserrat-SemiBold.ttf")
+      .registerFont("Regular", "./public/fonts/Montserrat-Regular.ttf")
+      .registerFont("Medium", "./public/fonts/Montserrat-Medium.ttf");
     return this;
   }
 
