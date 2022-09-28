@@ -1,4 +1,10 @@
-import { endOfMonth, format, nextWednesday, startOfMonth } from "date-fns";
+import {
+  endOfMonth,
+  endOfWeek,
+  format,
+  nextWednesday,
+  startOfMonth,
+} from "date-fns";
 import _ from "lodash";
 import { getEarnings, getEarningsMultiplier } from "../../api";
 import { NCDocument } from "../NCDocument";
@@ -65,7 +71,10 @@ export const modelsPayoutSummary = async (
         .font("Regular")
         .fillColor("black")
         .text(
-          `${format(nextWednesday(endOfMonth(month)), "LLL do, yyyy")}`,
+          `${format(
+            nextWednesday(endOfWeek(endOfMonth(month))),
+            "LLL do, yyyy"
+          )}`,
           doc.MARGIN_H + 140
         )
         .moveUp()
