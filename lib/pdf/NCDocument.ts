@@ -1,5 +1,6 @@
 import { format } from "date-fns";
 import getStream from "get-stream";
+import path from "path";
 import PDFDocument from "pdfkit";
 
 export class NCDocument {
@@ -32,11 +33,23 @@ export class NCDocument {
 
   registerFonts() {
     this.mDoc
-      .registerFont("Bold", "./public/fonts/Montserrat-Bold.ttf")
-      .registerFont("ExtraBold", "./public/fonts/Montserrat-ExtraBold.ttf")
-      .registerFont("SemiBold", "./public/fonts/Montserrat-SemiBold.ttf")
-      .registerFont("Regular", "./public/fonts/Montserrat-Regular.ttf")
-      .registerFont("Medium", "./public/fonts/Montserrat-Medium.ttf");
+      .registerFont("Bold", path.resolve("./public/fonts/Montserrat-Bold.ttf"))
+      .registerFont(
+        "ExtraBold",
+        path.resolve("./public/fonts/Montserrat-ExtraBold.ttf")
+      )
+      .registerFont(
+        "SemiBold",
+        path.resolve("./public/fonts/Montserrat-SemiBold.ttf")
+      )
+      .registerFont(
+        "Regular",
+        path.resolve("./public/fonts/Montserrat-Regular.ttf")
+      )
+      .registerFont(
+        "Medium",
+        path.resolve("./public/fonts/Montserrat-Medium.ttf")
+      );
     return this;
   }
 
