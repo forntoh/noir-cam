@@ -12,7 +12,8 @@ let transporter = nodemailer.createTransport({
 });
 
 type MailOptions = {
-  to: string[];
+  to: string;
+  cc?: string;
   subject: string;
   body?: string;
   attachments?: string[];
@@ -20,15 +21,17 @@ type MailOptions = {
 
 export const sendMail = async ({
   to,
+  cc,
   subject,
   body,
   attachments,
 }: MailOptions) => {
   // send mail with defined transport object
   let info = await transporter.sendMail({
-    from: from,
-    to: to.join(","),
-    subject: subject,
+    from,
+    to,
+    subject,
+    cc,
     text: body,
     attachments: attachments?.map((it) => {
       return {
