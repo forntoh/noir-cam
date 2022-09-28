@@ -16,12 +16,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const month = date
       ? parse(date as string, "yyyy-MM-dd", new Date())
       : new Date();
+    const mmyyyy = format(month, "MM-yyyy");
     const title = username ? "Earnings Summary" : "Model Payout Summary";
-    const subject = `${title} ${format(month, "MM-yyyy")}`;
+    const subject = `${title} ${mmyyyy}`;
     const fileName = buildFileName(
-      username
-        ? `${title} ${format(month, "MM-yyyy")}`
-        : `[${username}] - ${title} ${format(month, "MM-yyyy")}`
+      username ? `[${username}] - ${title} ${mmyyyy}` : `${title} ${mmyyyy}`
     );
 
     let buffer;
@@ -45,7 +44,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     });
 
     // res.setHeader("Content-type", "application/pdf");
-    res.status(200).json(info);
+    res.status(200).send(info.messageId);
   } catch (error) {
     res.status(500).send(error);
   }
