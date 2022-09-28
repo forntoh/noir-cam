@@ -45,7 +45,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     });
 
     // res.setHeader("Content-type", "application/pdf");
-    res.status(200).send(info);
+    res.status(200).json(info);
   } catch (error) {
     res.status(500).send(error);
   }
