@@ -50,7 +50,7 @@ export const modelsPayoutSummary = async (
         .value()
     )
     .do((d) => {
-      d.moveDown(2)
+      d.moveDown(1.5)
         .fontSize(10)
         .fillColor("#c6c6c6")
         .font("SemiBold")
