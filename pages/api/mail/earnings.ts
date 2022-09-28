@@ -20,12 +20,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       : new Date();
     const subject = `${title} ${format(month, "MM-yyyy")}`;
 
-    let path;
+    let buffer;
 
     if (username) {
-      path = await modelEarningsSummary(title, username as string, month);
+      buffer = await modelEarningsSummary(title, username as string, month);
     } else {
-      path = await modelsPayoutSummary(title, month);
+      buffer = await modelsPayoutSummary(title, month);
     }
 
     // await sendMail({
@@ -37,7 +37,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     // fs.unlinkSync(filePath);
 
-    res.status(200).json([path, req.headers["secret"]]);
+    // res.setHeader("Content-type", "application/pdf");
+    res.status(200).send(req.headers["secret"]);
   } catch (error) {
     res.status(200).end(error);
   }
