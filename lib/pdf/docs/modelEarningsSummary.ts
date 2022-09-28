@@ -7,12 +7,18 @@ export const modelEarningsSummary = async (
   title: string,
   username: string,
   month: Date = new Date()
-) => {
+): Promise<Buffer | undefined> => {
   const earnings = await getEarnings(
     username,
     startOfMonth(month),
     endOfMonth(month)
   );
+
+  if ((earnings?.length ?? 0) <= 0) {
+    return new Promise((resolve) => {
+      resolve(undefined);
+    });
+  }
 
   const multiplier = await getEarningsMultiplier(month);
 

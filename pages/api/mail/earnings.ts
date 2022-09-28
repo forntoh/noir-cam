@@ -36,20 +36,21 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       buffer = await modelsPayoutSummary(title, month);
     }
 
-    const info = await sendMail({
-      to: to as string,
-      cc: cc as string | undefined,
-      subject,
-      attachments: [
-        {
-          filename: fileName,
-          content: buffer,
-        },
-      ],
-    });
+    if (buffer) {
+      const info = await sendMail({
+        to: to as string,
+        cc: cc as string | undefined,
+        subject,
+        attachments: [
+          {
+            filename: fileName,
+            content: buffer,
+          },
+        ],
+      });
 
-    // res.setHeader("Content-type", "application/pdf");
-    res.status(200).send(info.messageId);
+      res.status(200).send(info.messageId);
+    }
   } catch (error) {
     res.status(500).send(error);
   }

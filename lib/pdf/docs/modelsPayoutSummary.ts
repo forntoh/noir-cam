@@ -6,12 +6,18 @@ import { NCDocument } from "../NCDocument";
 export const modelsPayoutSummary = async (
   title: string,
   month: Date = new Date()
-) => {
+): Promise<Buffer | undefined> => {
   const earnings = await getEarnings(
     undefined,
     startOfMonth(month),
     endOfMonth(month)
   );
+
+  if ((earnings?.length ?? 0) <= 0) {
+    return new Promise((resolve) => {
+      resolve(undefined);
+    });
+  }
 
   const multiplier = await getEarningsMultiplier(month);
 
