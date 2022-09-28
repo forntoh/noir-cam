@@ -25,7 +25,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const title = username ? "Earnings Summary" : "Model Payout Summary";
     const subject = `${title} ${mmyyyy}`;
     const fileName = buildFileName(
-      username ? `[${username}] - ${title} ${mmyyyy}` : `${title} ${mmyyyy}`
+      username ? `[${username}]-${title} ${mmyyyy}` : `${title} ${mmyyyy}`
     );
 
     let buffer;

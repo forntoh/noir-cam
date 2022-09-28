@@ -40,7 +40,7 @@ export const modelEarningsSummary = async (
       earnings!.map((v) => {
         return [
           `${formatStringDate(v.periodStart)} — ${formatStringDate(
-            v.periodStart
+            v.periodEnd
           )}`,
           `${v.tokens.toLocaleString()} tk`,
           `x${multiplier?.model_rate.toFixed(1)}`,
