@@ -1,4 +1,5 @@
 import { atom } from "recoil";
+import { Duplex } from "stream";
 import { CurrencyType } from "../typings";
 
 export const currencyAtom = atom<CurrencyType>({
@@ -27,3 +28,10 @@ export const rounder = (value: number, factor: number = 100) => {
   if (value < factor) return Math.ceil(value);
   return Math.ceil(value / factor) * factor;
 };
+
+export function bufferToStream(buffer: Buffer) {
+  let stream = new Duplex();
+  stream.push(buffer);
+  stream.push(null);
+  return stream;
+}
