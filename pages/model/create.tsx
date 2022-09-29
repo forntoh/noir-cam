@@ -54,10 +54,30 @@ export default function AddModel() {
       >
         <p className="leading-6">Add a new model to the studio</p>
         <div className="flex flex-col gap-5">
-          <Input placeholder="Username" type="text" {...register("username")} />
-          <Input placeholder="Email" type="email" {...register("email")} />
-          <Input placeholder="Date" type="date" {...register("start_date")} />
-          <Input placeholder="Phone" type="text" {...register("momo_number")} />
+          <Input
+            placeholder="Username"
+            type="text"
+            disabled={loading}
+            {...register("username")}
+          />
+          <Input
+            placeholder="Email"
+            type="email"
+            disabled={loading}
+            {...register("email")}
+          />
+          <Input
+            placeholder="Date"
+            type="date"
+            disabled={loading}
+            {...register("start_date")}
+          />
+          <Input
+            placeholder="Phone"
+            type="text"
+            disabled={loading}
+            {...register("momo_number")}
+          />
         </div>
         <Button
           type="submit"
