@@ -8,8 +8,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const {
     body: model,
     method,
-    query: { secret },
+    headers: { secret },
   } = req;
+
+  if (secret != process.env.NEXT_PUBLIC_API_SECRET) {
+    res.status(401).end("Unauthorized");
+    return;
+  }
 
   model as Model;
 
@@ -33,7 +38,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             delete model.user_id;
             delete model.momo_number;
             await nextApi.get("/earnings", {
-              params: { ...model, secret: secret },
+              params: { ...model },
+              headers: { secret: secret as string },
             });
           }
 

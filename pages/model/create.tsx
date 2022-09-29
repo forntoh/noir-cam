@@ -39,7 +39,7 @@ export default function AddModel() {
   const updateModel = async (model: Model) => {
     setLoading(true);
     const { data: success } = await nextApi.post<boolean>("/model", model, {
-      params: { secret: process.env.NEXT_PUBLIC_API_SECRET },
+      headers: { secret: process.env.NEXT_PUBLIC_API_SECRET ?? "" },
     });
     if (success) router.push("/");
     setLoading(false);
