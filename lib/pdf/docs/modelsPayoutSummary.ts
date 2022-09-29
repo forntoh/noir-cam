@@ -6,6 +6,7 @@ import {
   startOfMonth,
 } from "date-fns";
 import _ from "lodash";
+import { converter } from "../../../helpers/helpers";
 import { getEarnings, getEarningsMultiplier } from "../../api";
 import { NCDocument } from "../NCDocument";
 
@@ -48,8 +49,10 @@ export const modelsPayoutSummary = async (
             key,
             `${tokensSum.toLocaleString()} tk`,
             `x${multiplier?.model_rate.toFixed(1)}`,
-            `${(
-              tokensSum * (multiplier?.model_rate ?? 0)
+            `${converter(
+              tokensSum,
+              "Ksh",
+              multiplier?.model_rate
             ).toLocaleString()} Ksh`,
           ];
         })
@@ -80,9 +83,10 @@ export const modelsPayoutSummary = async (
         .moveUp()
         .font("Bold")
         .text(
-          `${(
-            earnings!.reduce((a, e) => a + e.tokens, 0) *
-            (multiplier?.model_rate ?? 0)
+          `${converter(
+            earnings!.reduce((a, e) => a + e.tokens, 0),
+            "Ksh",
+            multiplier?.model_rate
           ).toLocaleString()} Ksh`,
           { align: "right" }
         );

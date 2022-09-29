@@ -1,4 +1,5 @@
 import { endOfMonth, format, nextWednesday, startOfMonth } from "date-fns";
+import { converter } from "../../../helpers/helpers";
 import { formatStringDate } from "../../../utils/constants";
 import { getEarnings, getEarningsMultiplier } from "../../api";
 import { NCDocument } from "../NCDocument";
@@ -50,7 +51,11 @@ export const modelEarningsSummary = async (
           )}`,
           `${v.tokens.toLocaleString()} tk`,
           `x${multiplier?.model_rate.toFixed(1)}`,
-          `${(v.tokens * multiplier!.model_rate).toLocaleString()} Ksh`,
+          `${converter(
+            v.tokens,
+            "Ksh",
+            multiplier?.model_rate
+          ).toLocaleString()} Ksh`,
         ];
       })
     )
@@ -76,9 +81,10 @@ export const modelEarningsSummary = async (
         .moveUp()
         .font("Bold")
         .text(
-          `${(
-            earnings!.reduce((a, e) => a + e.tokens, 0) *
-            (multiplier?.model_rate ?? 0)
+          `${converter(
+            earnings?.reduce((a, e) => a + e.tokens, 0),
+            "Ksh",
+            multiplier?.model_rate
           ).toLocaleString()} Ksh`,
           { align: "right" }
         );
