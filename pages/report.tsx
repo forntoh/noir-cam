@@ -65,7 +65,7 @@ export default function Report() {
 
   const earningsPerModel = _(earnings).groupBy((x) => x.username);
 
-  const debts = _(debt).groupBy((x) => x.reason == "Early payment");
+  const debts = _(debt).groupBy((x) => x.reason == "payout");
 
   return (
     <PageWrapper title={`Report ${format(refDate, "MM-yyyy")}`}>
