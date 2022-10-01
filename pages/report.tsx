@@ -5,13 +5,13 @@ import {
 } from "@supabase/auth-helpers-nextjs";
 import {
   endOfMonth,
+  endOfWeek,
   format,
   parseISO,
   startOfMonth,
   startOfWeek,
   subMonths,
 } from "date-fns";
-import { endOfWeek } from "date-fns/esm";
 import _ from "lodash";
 import { useEffect, useState } from "react";
 import Card from "../components/card";
