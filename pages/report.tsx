@@ -8,8 +8,10 @@ import {
   format,
   parseISO,
   startOfMonth,
+  startOfWeek,
   subMonths,
 } from "date-fns";
+import { endOfWeek } from "date-fns/esm";
 import _ from "lodash";
 import { useEffect, useState } from "react";
 import Card from "../components/card";
@@ -30,7 +32,7 @@ import useSubscribeToCanges from "../hooks/useSubsribeToCanges";
 const now = new Date();
 
 export default function Report() {
-  const [refDate, setRefDate] = useState(now);
+  const [refDate, setRefDate] = useState(startOfWeek(now, { weekStartsOn: 1 }));
   const [, earnings, loadEarnings] = useEarnings();
   const [, earningsForMonth, loadEarningsForMonth] = useEarningsForPeriod();
   const [, debtForMonth, loadDebtForMonth] = useDebtForPeriod();
@@ -41,11 +43,13 @@ export default function Report() {
   const onChange = useSubscribeToCanges("earnings");
 
   useEffect(() => {
-    loadDebt(startOfMonth(refDate), endOfMonth(refDate));
-    loadEarningsForMonth(startOfMonth(refDate), endOfMonth(refDate));
-    loadDebtForMonth(startOfMonth(refDate), endOfMonth(refDate));
-    loadEarlyPaymentForMonth(startOfMonth(refDate), endOfMonth(refDate));
-    loadEarnings(undefined, startOfMonth(refDate), endOfMonth(refDate));
+    const monthStart = startOfMonth(refDate);
+    const monthEnd = endOfWeek(endOfMonth(refDate), { weekStartsOn: 1 });
+    loadDebt(monthStart, monthEnd);
+    loadEarningsForMonth(monthStart, monthEnd);
+    loadDebtForMonth(monthStart, monthEnd);
+    loadEarlyPaymentForMonth(monthStart, monthEnd);
+    loadEarnings(undefined, monthStart, monthEnd);
     loadEarningsMultiplier(format(refDate, "yyyy-MM-01"));
   }, [refDate, onChange]);
 

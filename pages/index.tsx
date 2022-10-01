@@ -31,7 +31,7 @@ import useSubscribeToCanges from "../hooks/useSubsribeToCanges";
 const now = new Date();
 
 export default function Home({ isAdmin }: { isAdmin: boolean }) {
-  const [refDate, setRefDate] = useState(now);
+  const [refDate, setRefDate] = useState(startOfWeek(now));
   const [currency] = useRecoilState(currencyAtom);
 
   const [, earnings, loadEarnings] = useEarnings();
@@ -43,14 +43,18 @@ export default function Home({ isAdmin }: { isAdmin: boolean }) {
   const onChange = useSubscribeToCanges("earnings");
 
   useEffect(() => {
-    loadEarnings(undefined, startOfMonth(refDate), endOfMonth(refDate));
+    loadEarnings(
+      undefined,
+      startOfMonth(refDate),
+      endOfWeek(endOfMonth(refDate), { weekStartsOn: 1 })
+    );
     loadEarningsMultiplier(format(refDate, "yyyy-MM-01"));
   }, [refDate, onChange]);
 
   useEffect(() => {
     loadEarningsForMonth(
       startOfMonth(refDate),
-      endOfMonth(refDate),
+      endOfWeek(endOfMonth(refDate), { weekStartsOn: 1 }),
       currency == "Ksh"
     );
     loadEarningsForWeek(
