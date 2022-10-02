@@ -23,7 +23,7 @@ type MailOptions = {
 export const sendMail = async ({ body, ...props }: MailOptions) => {
   let info = await transporter.sendMail({
     ...props,
-    text: body,
+    text: body ?? "NoirCam Studio",
     from,
   });
   return info;

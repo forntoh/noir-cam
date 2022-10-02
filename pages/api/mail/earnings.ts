@@ -49,10 +49,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           },
         ],
       });
-
       res.status(200).end(info.messageId);
-    }
-    res.status(404).end("Resource not found");
+    } else res.status(404).end("Resource not found");
   } catch (error) {
     res.status(500).send(error);
   }
