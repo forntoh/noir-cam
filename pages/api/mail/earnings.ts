@@ -1,5 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { format, parse } from "date-fns";
+import { format, parse, startOfWeek } from "date-fns";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { sendMail } from "../../../lib/mail";
 import { buildFileName } from "../../../lib/pdf/docs/helpers.docs";
@@ -20,7 +20,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const month = date
       ? parse(date as string, "yyyy-MM-dd", new Date())
-      : new Date();
+      : startOfWeek(new Date(), { weekStartsOn: 1 });
     const mmyyyy = format(month, "MM-yyyy");
     const title = username ? "Earnings Summary" : "Model Payout Summary";
     const subject = `${title} ${mmyyyy}`;
@@ -49,8 +49,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         ],
       });
 
-      res.status(200).send(info.messageId);
+      res.status(200).end(info.messageId);
     }
+    res.status(404).end("Resource not found");
   } catch (error) {
     res.status(500).send(error);
   }
