@@ -3,7 +3,7 @@ import {
   supabaseServerClient,
   withPageAuth,
 } from "@supabase/auth-helpers-nextjs";
-import { endOfWeek, format, startOfWeek, subMonths, subYears } from "date-fns";
+import { format, startOfWeek, subMonths, subYears } from "date-fns";
 import _ from "lodash";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
@@ -13,7 +13,12 @@ import { PageWrapper } from "../components/PageWrapper";
 import { PerMonthEarnings } from "../components/PerMonthEarnings";
 import WelcomeBar from "../components/welcome_bar";
 import { currencyAtom } from "../helpers/helpers";
-import { getEndOfMonth, getStartOfMonth } from "../helpers/helpers.date";
+import {
+  getEndOfMonth,
+  getEndOfWeek,
+  getStartOfMonth,
+  getStartOfWeek,
+} from "../helpers/helpers.date";
 import {
   useEarnings,
   useEarningsForPeriod,
@@ -47,8 +52,8 @@ export default function Home({ isAdmin }: { isAdmin: boolean }) {
       currency == "Ksh"
     );
     loadEarningsForWeek(
-      startOfWeek(now, { weekStartsOn: 1 }),
-      endOfWeek(now, { weekStartsOn: 1 }),
+      getStartOfWeek(now),
+      getEndOfWeek(now),
       currency == "Ksh"
     );
     loadAllEarnings(subYears(now, 1), now, currency == "Ksh");
