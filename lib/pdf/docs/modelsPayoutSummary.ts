@@ -1,12 +1,7 @@
-import {
-  endOfMonth,
-  endOfWeek,
-  format,
-  nextWednesday,
-  startOfMonth,
-} from "date-fns";
+import { endOfMonth, endOfWeek, format, nextWednesday } from "date-fns";
 import _ from "lodash";
 import { converter } from "../../../helpers/helpers";
+import { getEndOfMonth, getStartOfMonth } from "../../../helpers/helpers.date";
 import { getEarnings, getEarningsMultiplier } from "../../api";
 import { NCDocument } from "../NCDocument";
 
@@ -16,8 +11,8 @@ export const modelsPayoutSummary = async (
 ): Promise<Buffer | undefined> => {
   const earnings = await getEarnings(
     undefined,
-    startOfMonth(month),
-    endOfMonth(month)
+    getStartOfMonth(month),
+    getEndOfMonth(month)
   );
 
   if ((earnings?.length ?? 0) <= 0) {

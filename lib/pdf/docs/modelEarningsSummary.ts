@@ -1,5 +1,6 @@
-import { endOfMonth, format, nextWednesday, startOfMonth } from "date-fns";
+import { endOfMonth, format, nextWednesday } from "date-fns";
 import { converter } from "../../../helpers/helpers";
+import { getEndOfMonth, getStartOfMonth } from "../../../helpers/helpers.date";
 import { formatStringDate } from "../../../utils/constants";
 import { getEarnings, getEarningsMultiplier } from "../../api";
 import { NCDocument } from "../NCDocument";
@@ -11,8 +12,8 @@ export const modelEarningsSummary = async (
 ): Promise<Buffer | undefined> => {
   const earnings = await getEarnings(
     username,
-    startOfMonth(month),
-    endOfMonth(month)
+    getStartOfMonth(month),
+    getEndOfMonth(month)
   );
 
   if ((earnings?.length ?? 0) <= 0) {
