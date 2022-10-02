@@ -3,15 +3,7 @@ import {
   supabaseServerClient,
   withPageAuth,
 } from "@supabase/auth-helpers-nextjs";
-import {
-  endOfMonth,
-  endOfWeek,
-  format,
-  parseISO,
-  startOfMonth,
-  startOfWeek,
-  subMonths,
-} from "date-fns";
+import { format, parseISO, startOfWeek, subMonths } from "date-fns";
 import _ from "lodash";
 import { useEffect, useState } from "react";
 import Card from "../components/card";
@@ -20,6 +12,7 @@ import MyLink from "../components/link";
 import { MonthStepper } from "../components/MonthStepper";
 import { PageWrapper } from "../components/PageWrapper";
 import { converter, rounder } from "../helpers/helpers";
+import { getEndOfMonth, getStartOfMonth } from "../helpers/helpers.date";
 import { useDebt, useDebtForPeriod } from "../hooks/debt";
 import { useEarlyPaymentForPeriod } from "../hooks/debt/useDebt";
 import {
@@ -43,8 +36,8 @@ export default function Report() {
   const onChange = useSubscribeToCanges("earnings");
 
   useEffect(() => {
-    const monthStart = startOfMonth(refDate);
-    const monthEnd = endOfWeek(endOfMonth(refDate), { weekStartsOn: 1 });
+    const monthStart = getStartOfMonth(refDate);
+    const monthEnd = getEndOfMonth(refDate);
     loadDebt(monthStart, monthEnd);
     loadEarningsForMonth(monthStart, monthEnd);
     loadDebtForMonth(monthStart, monthEnd);
@@ -156,7 +149,9 @@ export default function Report() {
                     key={key}
                   >
                     <div className=" text-sm">
-                      <span>{format(parseISO(it.created_at), "iii d")}</span>
+                      <span>
+                        {format(parseISO(it.created_at), "iii d, MMM")}
+                      </span>
                     </div>
                     <span className="font-semibold">
                       {it.amount.toLocaleString()} Ksh
