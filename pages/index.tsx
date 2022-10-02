@@ -3,7 +3,7 @@ import {
   supabaseServerClient,
   withPageAuth,
 } from "@supabase/auth-helpers-nextjs";
-import { format, startOfWeek, subMonths, subYears } from "date-fns";
+import { format, subMonths, subYears } from "date-fns";
 import _ from "lodash";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
@@ -29,7 +29,7 @@ import useSubscribeToCanges from "../hooks/useSubsribeToCanges";
 const now = new Date();
 
 export default function Home({ isAdmin }: { isAdmin: boolean }) {
-  const [refDate, setRefDate] = useState(startOfWeek(now, { weekStartsOn: 1 }));
+  const [refDate, setRefDate] = useState(getStartOfWeek(now));
   const [currency] = useRecoilState(currencyAtom);
 
   const [, earnings, loadEarnings] = useEarnings();

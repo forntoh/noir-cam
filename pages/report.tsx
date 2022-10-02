@@ -3,7 +3,7 @@ import {
   supabaseServerClient,
   withPageAuth,
 } from "@supabase/auth-helpers-nextjs";
-import { format, parseISO, startOfWeek, subMonths } from "date-fns";
+import { format, parseISO, subMonths } from "date-fns";
 import _ from "lodash";
 import { useEffect, useState } from "react";
 import Card from "../components/card";
@@ -12,7 +12,11 @@ import MyLink from "../components/link";
 import { MonthStepper } from "../components/MonthStepper";
 import { PageWrapper } from "../components/PageWrapper";
 import { converter, rounder } from "../helpers/helpers";
-import { getEndOfMonth, getStartOfMonth } from "../helpers/helpers.date";
+import {
+  getEndOfMonth,
+  getStartOfMonth,
+  getStartOfWeek,
+} from "../helpers/helpers.date";
 import { useDebt, useDebtForPeriod } from "../hooks/debt";
 import { useEarlyPaymentForPeriod } from "../hooks/debt/useDebt";
 import {
@@ -25,7 +29,7 @@ import useSubscribeToCanges from "../hooks/useSubsribeToCanges";
 const now = new Date();
 
 export default function Report() {
-  const [refDate, setRefDate] = useState(startOfWeek(now, { weekStartsOn: 1 }));
+  const [refDate, setRefDate] = useState(getStartOfWeek(now));
   const [, earnings, loadEarnings] = useEarnings();
   const [, earningsForMonth, loadEarningsForMonth] = useEarningsForPeriod();
   const [, debtForMonth, loadDebtForMonth] = useDebtForPeriod();
