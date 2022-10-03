@@ -1,3 +1,4 @@
+import { toDateString } from "../../helpers/helpers.date";
 import { Debt } from "../../typings";
 import { supabase } from "../../utils/supabaseClient";
 import { runner } from "../../utils/supabaseRunner";
@@ -9,8 +10,8 @@ export const useDebt = () =>
     let query = supabase.from(table).select();
     if (start && end) {
       query = query
-        .gte("created_at", start.toISOString())
-        .lte("created_at", end.toISOString());
+        .gte("created_at", toDateString(start))
+        .lte("created_at", toDateString(end));
     }
     return query.order("created_at", { ascending: false });
   });
@@ -18,15 +19,15 @@ export const useDebt = () =>
 export const useDebtForPeriod = () =>
   runner<number | null | undefined>((start: Date, end: Date) => {
     return supabase.rpc("debt_for_period", {
-      a: start,
-      b: end,
+      a: toDateString(start),
+      b: toDateString(end),
     });
   });
 
 export const useEarlyPaymentForPeriod = () =>
   runner<number | null | undefined>((start: Date, end: Date) => {
     return supabase.rpc("early_payment_for_period", {
-      a: start,
-      b: end,
+      a: toDateString(start),
+      b: toDateString(end),
     });
   });
