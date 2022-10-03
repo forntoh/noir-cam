@@ -1,3 +1,4 @@
+import { toDateString } from "../../helpers/helpers.date";
 import { Earning } from "../../typings";
 import { supabase } from "../../utils/supabaseClient";
 import { runner } from "../../utils/supabaseRunner";
@@ -9,9 +10,9 @@ export const useEarnings = () =>
     let query = supabase.from(table).select();
     if (username) query = query.eq("username", username);
     if (start && end) {
-      const a = end.toISOString();
+      const a = toDateString(end);
       query = query
-        .gte("periodStart", start.toISOString())
+        .gte("periodStart", toDateString(start))
         .or(`periodStart.lte.${a},periodEnd.lte.${a}`);
     }
     return query.order("periodStart", { ascending: false });
@@ -21,8 +22,8 @@ export const useEarningsForPeriod = () =>
   runner<number>(
     (start: Date, end: Date, c: boolean = false, username: string) => {
       return supabase.rpc("earnings_for_period", {
-        a: start,
-        b: end,
+        a: toDateString(start),
+        b: toDateString(end),
         uname: username,
         c: c,
       });
@@ -41,8 +42,8 @@ export const useEarningsMultiplier = () =>
 export const useTopModelsForPeriod = () =>
   runner<TopModels[]>((start: Date, end: Date) => {
     return supabase.rpc("model_ranking_for_period", {
-      a: start,
-      b: end,
+      a: toDateString(start),
+      b: toDateString(end),
     });
   });
 
