@@ -1,8 +1,17 @@
-import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
+import {
+  addSeconds,
+  endOfMonth,
+  endOfWeek,
+  format,
+  startOfMonth,
+  startOfWeek,
+} from "date-fns";
 
 export const getStartOfMonth = (refDate: Date) => {
   const som = startOfMonth(refDate);
-  return som.getDay() == 1 ? som : getEndOfWeek(startOfMonth(refDate));
+  return som.getDay() == 1
+    ? som
+    : addSeconds(getEndOfWeek(startOfMonth(refDate)), 1);
 };
 
 export const getEndOfMonth = (refDate: Date) =>
@@ -13,3 +22,5 @@ export const getStartOfWeek = (refDate: Date) =>
 
 export const getEndOfWeek = (refDate: Date) =>
   endOfWeek(refDate, { weekStartsOn: 1 });
+
+export const toDateString = (refDate: Date) => format(refDate, "yyyy-MM-dd");
