@@ -92,40 +92,13 @@ const fetchStrip = async (username: string, start: Date, end: Date) => {
 };
 
 function sanitize(data: any) {
-  delete data["groupShows"];
-  delete data["refunds"];
-  delete data["modelsReferralProgram"];
-  delete data["otherIncome"];
-  delete data["massMessages"];
-  delete data["photoSalesPM"];
-  delete data["publicShowRecordings"];
-  delete data["spyOnPrivatesVR"];
-  delete data["publicTipsVR"];
-  delete data["usersReferralProgram"];
-  delete data["fanClubPrinces"];
-  delete data["fanClubLords"];
-  delete data["fanClubSoldiers"];
-  delete data["anonymousTipsVR"];
-  delete data["anonymousTips"];
-  delete data["privateChatTipsVR"];
-  delete data["userTipsVR"];
-  delete data["exclusivePrivateNoVideo"];
-  delete data["contestWin"];
-  delete data["spyOnPrivates"];
-  delete data["videoSales"];
-  delete data["albumSales"];
-  delete data["unlockChat"];
-  delete data["offlineTips"];
-  delete data["localRefund"];
-  delete data["tips"];
-  delete data["publicChatTips"];
-  delete data["privateChatTips"];
-  delete data["privateShows"];
-  delete data["exclusivePrivates"];
-
   data["tokens"] = data["totalEarnings"];
   data["periodStart"] = (data["periodStart"] as string).slice(0, 10);
   data["periodEnd"] = (data["periodEnd"] as string).slice(0, 10);
 
-  delete data["totalEarnings"];
+  Object.keys(data).forEach((key) => {
+    if (!["tokens", "periodStart", "periodEnd"].includes(key)) {
+      delete data[key];
+    }
+  });
 }
