@@ -12,11 +12,7 @@ import MyLink from "../components/link";
 import { MonthStepper } from "../components/MonthStepper";
 import { PageWrapper } from "../components/PageWrapper";
 import { converter, rounder } from "../helpers/helpers";
-import {
-  getEndOfMonth,
-  getStartOfMonth,
-  getStartOfWeek,
-} from "../helpers/helpers.date";
+import { getEndOfMonth, getStartOfMonth } from "../helpers/helpers.date";
 import { useDebt, useDebtForPeriod } from "../hooks/debt";
 import { useEarlyPaymentForPeriod } from "../hooks/debt/useDebt";
 import {
@@ -29,7 +25,7 @@ import useSubscribeToCanges from "../hooks/useSubsribeToCanges";
 const now = new Date();
 
 export default function Report() {
-  const [refDate, setRefDate] = useState(getStartOfWeek(now));
+  const [refDate, setRefDate] = useState(now);
   const [, earnings, loadEarnings] = useEarnings();
   const [, earningsForMonth, loadEarningsForMonth] = useEarningsForPeriod();
   const [, debtForMonth, loadDebtForMonth] = useDebtForPeriod();

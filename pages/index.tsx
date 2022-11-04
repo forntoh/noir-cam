@@ -29,7 +29,7 @@ import useSubscribeToCanges from "../hooks/useSubsribeToCanges";
 const now = new Date();
 
 export default function Home({ isAdmin }: { isAdmin: boolean }) {
-  const [refDate, setRefDate] = useState(getStartOfWeek(now));
+  const [refDate, setRefDate] = useState(now);
   const [currency] = useRecoilState(currencyAtom);
 
   const [, earnings, loadEarnings] = useEarnings();
