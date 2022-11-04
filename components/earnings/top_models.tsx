@@ -1,5 +1,6 @@
-import { endOfMonth, format, startOfMonth } from "date-fns";
+import { format } from "date-fns";
 import { useEffect } from "react";
+import { getEndOfMonth, getStartOfMonth } from "../../helpers/helpers.date";
 import { useTopModelsForPeriod } from "../../hooks/earnings";
 import EarningWrapper from "./earning_wrapper";
 
@@ -7,7 +8,7 @@ function TopModels({ month }: { month: Date }) {
   const [, topModels, loadTopModels] = useTopModelsForPeriod();
 
   useEffect(() => {
-    loadTopModels(startOfMonth(month), endOfMonth(month));
+    loadTopModels(getStartOfMonth(month), getEndOfMonth(month));
   }, [month]);
 
   return (
