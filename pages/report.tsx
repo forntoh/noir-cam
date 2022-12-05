@@ -163,6 +163,18 @@ export default function Report() {
                     No widthdrawals for {format(refDate, "MMM yyyy")}
                   </li>
                 ) : undefined}
+                <li className="flex border-t-2 font-semibold justify-between items-center px-3 py-2 xl:py-3">
+                  <span>Total</span>
+                  <span>
+                    {(
+                      debts
+                        ?.get("true")
+                        ?.reduce((partialSum, a) => partialSum + a.amount, 0) ??
+                      0
+                    ).toLocaleString()}{" "}
+                    Ksh
+                  </span>
+                </li>
               </ul>
             </Card>
           </div>
